@@ -1,0 +1,4 @@
+VAR cislo : REAL := 1;
+
+cislo := 5;
+cislo := 5.5;
