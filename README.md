@@ -22,6 +22,16 @@ Operace:
 
 Struktury:
   -  IF blok ❌
+      - Porovnávání podmínek
+          - 1 / 0 ✅
+          - identifier ❌
+          - greater ✅
+          - greater equals ✅
+          - less ✅
+          - less equals ✅
+          - equals ❌
+          - not equals ❌
+        
   -  FOR cyklus ✅
   -  Definice funkcí ❌
   -  Volání funkcí ❌
