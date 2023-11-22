@@ -6,6 +6,7 @@ Kontrola existence proměnných při přiřazení ❌
 
 Proměnné:
   - INTEGER ✅
+      - nějak blbnou záporná čísla při inicializaci
   - CHAR ✅
   - REAL ✅
   - ARRAY ❌
