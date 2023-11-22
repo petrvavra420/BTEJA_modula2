@@ -17,6 +17,7 @@ Operace:
   - násobení ✅
   - dělení ✅
   - precedence ✅
+  - kontrola typů při operacích ✅
 
 IF blok ❌
 FOR cyklus ❌
