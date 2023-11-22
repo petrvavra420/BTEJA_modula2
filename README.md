@@ -10,6 +10,7 @@ Proměnné:
   - REAL ✅
   - ARRAY ❌
   - inicilizace výrazem ✅
+
 Operace:
   - sčítání ✅
   - odčítání ✅
