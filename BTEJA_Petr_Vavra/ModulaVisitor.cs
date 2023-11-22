@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -25,6 +26,7 @@ namespace BTEJA_Petr_Vavra
 
             var identifier = context.ident().GetText();
             DataType dataType = (DataType)VisitType(context.type());
+            //pokud není pole
             if (dataType != DataType.ARRAY)
             {
                 Variable varNew = new Variable();
@@ -33,8 +35,9 @@ namespace BTEJA_Petr_Vavra
                 //pokud obsahuje i inicializaci tak načteme expr
                 if (context.GetText().Contains(":="))
                 {
-                    //kontrola přiřazení správné hodnoty dle datového typu
+                    //načtení hodnoty
                     varNew.Value = VisitExpression(context.expression());
+                    //kontrola přiřazení správné hodnoty dle datového typu
                     Type valueType = varNew.Value.GetType();
                     if (
                         !((valueType == typeof(int) && varNew.DataType == DataType.INTEGER)
@@ -163,7 +166,7 @@ namespace BTEJA_Petr_Vavra
             {
                 return lFloat / rInt;
             }
-            throw new Exception("unable to subtract " + left + " and " + right);
+            throw new Exception("unable to divide " + left + " and " + right);
         }
 
         private object? Multiply(object? left, object? right)
@@ -184,8 +187,7 @@ namespace BTEJA_Petr_Vavra
             {
                 return lFloat * rInt;
             }
-            throw new Exception("unable to subtract " + left + " and " + right);
-            throw new NotImplementedException();
+            throw new Exception("unable to multiply " + left + " and " + right);
         }
 
         private object? Negate(object? result)
@@ -199,7 +201,7 @@ namespace BTEJA_Petr_Vavra
                 return rFloat * -1;
             }
 
-            throw new NotImplementedException();
+            throw new Exception("unable to negate " + result);
         }
 
         private object? Subtract(object? left, object? right)
@@ -242,7 +244,7 @@ namespace BTEJA_Petr_Vavra
                 return lFloat + rInt;
             }
 
-            Console.WriteLine("typ: " + left.GetType());
+            //Console.WriteLine("typ: " + left.GetType());
             throw new Exception("unable to add " + left + " and " + right);
         }
 
@@ -302,6 +304,378 @@ namespace BTEJA_Petr_Vavra
             return number;
         }
 
+
+        //forStatement: 'FOR' ident ':=' expression 'TO' expression ('BY' expression)? 'DO' (statement ';')+ 'END';
+        public override object VisitForStatement([NotNull] Modula2Parser.ForStatementContext context)
+        {
+            //zjistíme název první proměnné
+            object ident = context.ident().GetText();
+            //zjistíme jestli existuje
+            Variable variable = tryFindVariableByIdent(ident);
+            //pokud neexistuje, vytvoříme a přidáme do seznamu
+            if (variable == null)
+            {
+                variable = new Variable();
+                variable.Name = (string)ident;
+                variable.DataType = DataType.INTEGER;
+                Variables.Add(variable);
+            }
+            //kontrola pokud už existující proměnná je typu INTEGER
+            if (variable.DataType != DataType.INTEGER)
+            {
+                throw new Exception("Existing variable '" + variable.Name + "' is not type INTEGER");
+            }
+            //přiřadíme hodnotu
+            variable.Value = VisitExpression(context.expression(0));
+
+            int rangeFrom = (int)variable.Value;
+            //uložíme si pravou krajní mez FOR cyklu
+            int rangeTo = (int)VisitExpression(context.expression(1));
+            //výchozí hodnota inkrementace bude jedna, není li specifikování "BY" jinak
+            int rangeBy = 1;
+            //pokud existuje třetí výraz v definici, budeme předpokládat že se jedná o "BY"
+            if (context.expression(2) != null)
+            {
+                rangeBy = (int)VisitExpression(context.expression(2));
+            }
+
+            Console.WriteLine("---DEBUG: " + ident + " a hodnota: " + variable.Value + ", TO: " + rangeTo + ", BY: " + rangeBy);
+
+            for (int i = rangeFrom; i < rangeTo; i += rangeBy)
+            {
+                foreach (var statement in context.statement())
+                {
+                    VisitStatement(statement);
+                }
+            }
+            return null;
+        }
+
+
+        //ifStatement: 'IF' condition 'THEN' (statement ';')+ ('ELSIF' condition 'THEN' (statement ';')+)* ('ELSE' (statement ';')+)? 'END';
+        //public override object VisitIfStatement([NotNull] Modula2Parser.IfStatementContext context)
+        //{
+
+        //    bool condition = (bool)VisitCondition(context.condition(0));
+
+        //    //zkontrolujeme první IF, pokud je TRUE, provedeme všechny příkazy
+        //    if (condition)
+        //    {
+        //        Console.WriteLine("---DEBUG: Condition is TRUE");
+        //        foreach (var statement in context.statement())
+        //        {
+        //            VisitStatement(statement);
+        //        }
+        //        return null;
+        //    }
+        //    else if (!condition)
+        //    {
+        //        Console.WriteLine("---DEBUG: MAIN Condition is FALSE");
+        //        //pokud je FALSE, zkontrolujeme zda existuje ELSEIF
+        //        //POKUD ANO, zkontrolujeme zda je TRUE, pokud ano, provedeme příkazy
+        //        //POKUD NE, zkontrolujeme zda existuje ELSE, pokud ano, provedeme příkazy
+        //        foreach (var conditionElse in context.condition())
+        //        {
+        //            bool conditionElseResult = (bool)VisitCondition(conditionElse);
+        //            if (conditionElseResult)
+        //            {
+        //                Console.WriteLine("---DEBUG: ELSEIF Condition is TRUE");
+        //                foreach (var statement in context.statement())
+        //                {
+        //                    VisitStatement(statement);
+        //                }
+        //                return null;
+        //            }
+        //            else { 
+        //                Console.WriteLine("---DEBUG: ELSEIF Condition is FALSE");
+        //                Console.WriteLine("---DEBUG: Moving on...");
+        //            }
+
+
+        //        }
+
+        //        //ELSE
+        //        foreach (var statement in context.statement())
+        //        {
+        //            VisitStatement(statement);
+        //        }
+
+
+        //    }
+
+
+        //    return null;
+        //}
+      
+
+
+
+
+        //condition: expression ('>=' | '<=' | '>' | '<' | '=' | '#') expression | ident | ('1' | '0');
+        public override object VisitCondition([NotNull] Modula2Parser.ConditionContext context)
+        {
+
+            string text = context.GetText();
+
+
+            //true nebo false check ('1' | '0')
+            if (text == "1")
+            {
+                return true;
+            }
+            else if (text == "0")
+            {
+                return false;
+            }
+
+            //check ('>=' | '<=' | '>' | '<' | '=' | '#')
+            if (text.Contains(">="))
+            {
+                object left = VisitExpression(context.expression(0));
+                object right = VisitExpression(context.expression(1));
+                bool result = GreaterThanOrEqual(left, right);
+                return result;
+            }
+
+            if (text.Contains("<="))
+            {
+                object left = VisitExpression(context.expression(0));
+                object right = VisitExpression(context.expression(1));
+                bool result = LessThanOrEqual(left, right);
+                return result;
+            }
+
+            if (text.Contains(">"))
+            {
+                object left = VisitExpression(context.expression(0));
+                object right = VisitExpression(context.expression(1));
+                bool result = GreaterThan(left, right);
+                return result;
+            }
+
+            if (text.Contains("<"))
+            {
+                object left = VisitExpression(context.expression(0));
+                object right = VisitExpression(context.expression(1));
+                bool result = LessThan(left, right);
+                return result;
+            }
+
+            if (text.Contains("="))
+            {
+                object left = VisitExpression(context.expression(0));
+                object right = VisitExpression(context.expression(1));
+                bool result = IsEqual(left, right);
+                return result;
+            }
+            if (text.Contains("#"))
+            {
+                object left = VisitExpression(context.expression(0));
+                object right = VisitExpression(context.expression(1));
+                bool result = IsNotEqual(left, right);
+                return result;
+            }
+
+            //check ident
+            if (context.ident() != null)
+            {
+                object ident = context.ident().GetText();
+                Variable variable = tryFindVariableByIdent(ident);
+                if (variable == null)
+                {
+                    throw new Exception("Variable " + ident + " is not defined.");
+                }
+
+                if (variable.Value == "1")
+                {
+                    return true;
+                }
+                if (variable.Value == "0")
+                {
+                    return false;
+                }
+                if (variable.DataType == DataType.INTEGER)
+                {
+                    if ((int)variable.Value == 1)
+                    {
+                        return true;
+                    }
+                    if ((int)variable.Value == 0)
+                    {
+                        return false;
+                    }
+                }
+                if (variable.DataType == DataType.REAL)
+                {
+                    if ((float)variable.Value == 1)
+                    {
+                        return true;
+                    }
+                    if ((float)variable.Value == 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return null;
+        }
+
+
+        private bool GreaterThan(object left, object right)
+        {
+            if (left is int l && right is int r)
+            {
+                return l > r;
+            }
+            if (left is float lf && right is float rf)
+            {
+                return lf > rf;
+            }
+            if (left is int lInt && right is float rFloat)
+            {
+                return lInt > rFloat;
+            }
+            if (left is float lFloat && right is int rInt)
+            {
+                return lFloat > rInt;
+            }
+            throw new Exception("unable to compare " + left + " and " + right);
+        }
+        private bool GreaterThanOrEqual(object left, object right)
+        {
+            if (left is int l && right is int r)
+            {
+                return l >= r;
+            }
+            if (left is float lf && right is float rf)
+            {
+                return lf >= rf;
+            }
+            if (left is int lInt && right is float rFloat)
+            {
+                return lInt >= rFloat;
+            }
+            if (left is float lFloat && right is int rInt)
+            {
+                return lFloat >= rInt;
+            }
+            throw new Exception("unable to compare " + left + " and " + right);
+        }
+        private bool LessThanOrEqual(object left, object right)
+        {
+            if (left is int l && right is int r)
+            {
+                return l <= r;
+            }
+            if (left is float lf && right is float rf)
+            {
+                return lf <= rf;
+            }
+            if (left is int lInt && right is float rFloat)
+            {
+                return lInt <= rFloat;
+            }
+            if (left is float lFloat && right is int rInt)
+            {
+                return lFloat <= rInt;
+            }
+            throw new Exception("unable to compare " + left + " and " + right);
+        }
+        private bool LessThan(object? left, object? right)
+        {
+            if (left is int l && right is int r)
+            {
+                return l < r;
+            }
+            if (left is float lf && right is float rf)
+            {
+                return lf < rf;
+            }
+            if (left is int lInt && right is float rFloat)
+            {
+                return lInt < rFloat;
+            }
+            if (left is float lFloat && right is int rInt)
+            {
+                return lFloat < rInt;
+            }
+            throw new Exception("unable to compare " + left + " and " + right);
+        }
+        private bool IsEqual(object left, object right)
+        {
+            if (left is int l && right is int r)
+            {
+                return l == r;
+            }
+            if (left is float lf && right is float rf)
+            {
+                return lf == rf;
+            }
+            if (left is int lInt && right is float rFloat)
+            {
+                return lInt == rFloat;
+            }
+            if (left is float lFloat && right is int rInt)
+            {
+                return lFloat == rInt;
+            }
+            throw new Exception("unable to compare " + left + " and " + right);
+        }
+        private bool IsNotEqual(object left, object right)
+        {
+            if (left is int l && right is int r)
+            {
+                return l != r;
+            }
+            if (left is float lf && right is float rf)
+            {
+                return lf != rf;
+            }
+            if (left is int lInt && right is float rFloat)
+            {
+                return lInt != rFloat;
+            }
+            if (left is float lFloat && right is int rInt)
+            {
+                return lFloat != rInt;
+            }
+            throw new Exception("unable to compare " + left + " and " + right);
+        }
+
+        //pomocná metoda na hledání proměnných v seznamu dle identifikátoru
+        private Variable tryFindVariableByIdent(object ident)
+        {
+            try
+            {
+                string identString = ident as string;
+
+                if (identString != null)
+                {
+                    Variable variableFind = Variables.FirstOrDefault(variable => variable.Name == identString);
+
+                    //nalezen prvek
+                    if (variableFind != null)
+                    {
+                        return variableFind;
+                    }
+                    //nenalazen, vracíme NULL
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Ident is empty.");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
 
 
     }

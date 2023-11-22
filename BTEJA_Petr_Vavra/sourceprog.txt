@@ -1,4 +1,11 @@
-VAR cislo : REAL := 1;
+VAR test : INTEGER := 100;
 
-cislo := 5;
-cislo := 5.5;
+VAR trueyes : INTEGER := 1;
+VAR falseno : INTEGER := 0;
+
+IF  1 < 2 THEN
+	test := 1;
+
+	ELSIF 1 < 2 THEN
+		test := 2;
+END;

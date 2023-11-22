@@ -8,7 +8,11 @@ varStatement: 'VAR' ident ':' type (':=' (expression | procedureCall))?;
 
 assignment: ident ('[' expression ']')? ':=' (expression | procedureCall);
 
-ifStatement: 'IF' condition 'THEN' (statement ';')+ ('ELSIF' condition 'THEN' (statement ';')+)* ('ELSE' (statement ';')+)? 'END';
+ifStatement: 'IF' condition 'THEN' ifBlock ('ELSIF' condition 'THEN' elseIfBlock)* ('ELSE' elseBlock)? 'END';
+
+ifBlock:  (statement ';')+;
+elseIfBLock: (statement ';')+;
+elseBlock: (statement ';')+;
 
 forStatement: 'FOR' ident ':=' expression 'TO' expression ('BY' expression)? 'DO' (statement ';')+ 'END';
 
