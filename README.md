@@ -20,10 +20,12 @@ Operace:
   - precedence ✅
   - kontrola typů při operacích ✅
 
-IF blok ❌
-FOR cyklus ❌
-Definice funkcí ❌
-Volání funkcí ❌
-Lokální/globální proměnné ❌
-Výpis do konzole ❌
-Čtení z konzole ❌
+Struktury:
+  -  IF blok ❌
+  -  FOR cyklus ✅
+  -  Definice funkcí ❌
+  -  Volání funkcí ❌
+  -  Lokální/globální proměnné ❌
+  -  Výpis do konzole ❌
+  -  Čtení z konzole ❌
+    
