@@ -353,60 +353,82 @@ namespace BTEJA_Petr_Vavra
 
 
         //ifStatement: 'IF' condition 'THEN' (statement ';')+ ('ELSIF' condition 'THEN' (statement ';')+)* ('ELSE' (statement ';')+)? 'END';
-        //public override object VisitIfStatement([NotNull] Modula2Parser.IfStatementContext context)
-        //{
+        public override object VisitIfStatement([NotNull] Modula2Parser.IfStatementContext context)
+        {
 
-        //    bool condition = (bool)VisitCondition(context.condition(0));
+            bool condition = (bool)VisitCondition(context.condition(0));
 
-        //    //zkontrolujeme první IF, pokud je TRUE, provedeme všechny příkazy
-        //    if (condition)
-        //    {
-        //        Console.WriteLine("---DEBUG: Condition is TRUE");
-        //        foreach (var statement in context.statement())
-        //        {
-        //            VisitStatement(statement);
-        //        }
-        //        return null;
-        //    }
-        //    else if (!condition)
-        //    {
-        //        Console.WriteLine("---DEBUG: MAIN Condition is FALSE");
-        //        //pokud je FALSE, zkontrolujeme zda existuje ELSEIF
-        //        //POKUD ANO, zkontrolujeme zda je TRUE, pokud ano, provedeme příkazy
-        //        //POKUD NE, zkontrolujeme zda existuje ELSE, pokud ano, provedeme příkazy
-        //        foreach (var conditionElse in context.condition())
-        //        {
-        //            bool conditionElseResult = (bool)VisitCondition(conditionElse);
-        //            if (conditionElseResult)
-        //            {
-        //                Console.WriteLine("---DEBUG: ELSEIF Condition is TRUE");
-        //                foreach (var statement in context.statement())
-        //                {
-        //                    VisitStatement(statement);
-        //                }
-        //                return null;
-        //            }
-        //            else { 
-        //                Console.WriteLine("---DEBUG: ELSEIF Condition is FALSE");
-        //                Console.WriteLine("---DEBUG: Moving on...");
-        //            }
+            //zkontrolujeme první IF, pokud je TRUE, provedeme všechny příkazy
+            if (condition)
+            {
+                Console.WriteLine("---DEBUG: Condition is TRUE");
+                Visit(context.ifBlock());
+                return null;
+            }
+            else if (!condition)
+            {
+                Console.WriteLine("---DEBUG: MAIN Condition is FALSE");
+                //pokud je FALSE, zkontrolujeme zda existuje ELSEIF
+                //POKUD ANO, zkontrolujeme zda je TRUE, pokud ano, provedeme příkazy
+                //POKUD NE, zkontrolujeme zda existuje ELSE, pokud ano, provedeme příkazy
+                //int conditionCount = 0;
+                //foreach (var conditionElse in context.condition())
+                //{
+                //    bool conditionElseResult = (bool)VisitCondition(conditionElse);
+                //    if (conditionElseResult)
+                //    {
+                //        Console.WriteLine("---DEBUG: ELSEIF Condition is TRUE");
+                //        //foreach (var statement in context.ifBlock())
+                //        //{
+                //        //    VisitIfBlock(statement);
+                //        //}
+                //        //Visit(else);
+                        
+                //        Visit(context.elseIfBlock(conditionCount - 1));
+
+                //        return null;
+                //    }
+                //    else
+                //    {
+                //        Console.WriteLine("---DEBUG: ELSEIF Condition is FALSE");
+                //        Console.WriteLine("---DEBUG: Moving on...");
+                //    }
+
+                //    conditionCount++;
+                //}
+                for (int i = 1; i < context.condition().Length; i++)
+                {
+                    bool conditionElseResult = (bool)VisitCondition(context.condition(i));
+                    if (conditionElseResult)
+                    {
+                        Console.WriteLine("---DEBUG: ELSEIF Condition is TRUE");
+                        // minus jedna protože první je IF
+                        Visit(context.elseIfBlock(i - 1));
+                        return null;
+                    }
+                    else
+                    {
+                        Console.WriteLine("---DEBUG: ELSEIF Condition is FALSE");
+                        Console.WriteLine("---DEBUG: Moving on...");
+                    }
+
+                }
 
 
-        //        }
-
-        //        //ELSE
-        //        foreach (var statement in context.statement())
-        //        {
-        //            VisitStatement(statement);
-        //        }
-
-
-        //    }
+                //ELSE
+                //foreach (var statement in context.ifBlock())
+                //{
+                //    VisitIfBlock(statement);
+                //}
+                Visit(context.elseBlock());
 
 
-        //    return null;
-        //}
-      
+            }
+
+
+            return null;
+        }
+
 
 
 

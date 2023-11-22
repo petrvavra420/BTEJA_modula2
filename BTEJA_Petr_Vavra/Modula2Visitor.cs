@@ -62,6 +62,24 @@ public interface IModula2Visitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitIfStatement([NotNull] Modula2Parser.IfStatementContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="Modula2Parser.ifBlock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitIfBlock([NotNull] Modula2Parser.IfBlockContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="Modula2Parser.elseIfBlock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitElseIfBlock([NotNull] Modula2Parser.ElseIfBlockContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="Modula2Parser.elseBlock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitElseBlock([NotNull] Modula2Parser.ElseBlockContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="Modula2Parser.forStatement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

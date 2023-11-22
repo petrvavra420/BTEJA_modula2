@@ -96,6 +96,42 @@ public partial class Modula2BaseListener : IModula2Listener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitIfStatement([NotNull] Modula2Parser.IfStatementContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="Modula2Parser.ifBlock"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterIfBlock([NotNull] Modula2Parser.IfBlockContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="Modula2Parser.ifBlock"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitIfBlock([NotNull] Modula2Parser.IfBlockContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="Modula2Parser.elseIfBlock"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterElseIfBlock([NotNull] Modula2Parser.ElseIfBlockContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="Modula2Parser.elseIfBlock"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitElseIfBlock([NotNull] Modula2Parser.ElseIfBlockContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="Modula2Parser.elseBlock"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterElseBlock([NotNull] Modula2Parser.ElseBlockContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="Modula2Parser.elseBlock"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitElseBlock([NotNull] Modula2Parser.ElseBlockContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="Modula2Parser.forStatement"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

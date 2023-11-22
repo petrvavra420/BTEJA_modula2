@@ -81,6 +81,36 @@ public interface IModula2Listener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitIfStatement([NotNull] Modula2Parser.IfStatementContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="Modula2Parser.ifBlock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterIfBlock([NotNull] Modula2Parser.IfBlockContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="Modula2Parser.ifBlock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitIfBlock([NotNull] Modula2Parser.IfBlockContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="Modula2Parser.elseIfBlock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterElseIfBlock([NotNull] Modula2Parser.ElseIfBlockContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="Modula2Parser.elseIfBlock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitElseIfBlock([NotNull] Modula2Parser.ElseIfBlockContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="Modula2Parser.elseBlock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterElseBlock([NotNull] Modula2Parser.ElseBlockContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="Modula2Parser.elseBlock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitElseBlock([NotNull] Modula2Parser.ElseBlockContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="Modula2Parser.forStatement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

@@ -3,9 +3,27 @@ VAR test : INTEGER := 100;
 VAR trueyes : INTEGER := 1;
 VAR falseno : INTEGER := 0;
 
-IF  1 < 2 THEN
+
+IF  1 > 2 THEN
 	test := 1;
 
-	ELSIF 1 < 2 THEN
+	ELSIF 2 = 2 THEN
 		test := 2;
+
+		IF 1 < 2 THEN
+			test := 10;
+			FOR i := 0 TO 10 DO
+				IF 5 = 5 THEN
+					test := 100;
+				END;
+				
+			END;
+		ELSE
+			test := 20;
+		END;
+
+	ELSIF 1 > 2 THEN
+		test := 3;
+	ELSE
+		test := 4;
 END;
