@@ -21,16 +21,16 @@ Operace:
   - kontrola typů při operacích ✅
 
 Struktury:
-  -  IF blok ❌
+  -  IF blok ✅
       - Porovnávání podmínek
           - 1 / 0 ✅
-          - identifier ❌
+          - identifier ✅
           - greater ✅
           - greater equals ✅
           - less ✅
           - less equals ✅
-          - equals ❌
-          - not equals ❌
+          - equals ✅
+          - not equals ✅
         
   -  FOR cyklus ✅
   -  Definice funkcí ❌
