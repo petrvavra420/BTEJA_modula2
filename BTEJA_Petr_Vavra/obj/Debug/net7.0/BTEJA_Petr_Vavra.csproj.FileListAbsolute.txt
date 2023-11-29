@@ -35,6 +35,12 @@ C:\xampp\htdocs\BSWS\bswsProjekt\BTEJA_modula2\BTEJA_Petr_Vavra\bin\Debug\net7.0
 C:\xampp\htdocs\BSWS\bswsProjekt\BTEJA_modula2\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.csproj.CopyComplete
 C:\xampp\htdocs\BSWS\bswsProjekt\BTEJA_modula2\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.genruntimeconfig.cache
 C:\xampp\htdocs\BSWS\bswsProjekt\BTEJA_modula2\BTEJA_Petr_Vavra\obj\Debug\net7.0\ref\BTEJA_Petr_Vavra.dll
+C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.csproj.AssemblyReference.cache
+C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.AssemblyInfoInputs.cache
+C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.AssemblyInfo.cs
+C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.csproj.CoreCompileInputs.cache
+C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.sourcelink.json
 C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\bin\Debug\net7.0\BTEJA_Petr_Vavra.exe
 C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\bin\Debug\net7.0\BTEJA_Petr_Vavra.deps.json
 C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\bin\Debug\net7.0\BTEJA_Petr_Vavra.runtimeconfig.json
@@ -42,12 +48,6 @@ C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\bin\Debu
 C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\bin\Debug\net7.0\BTEJA_Petr_Vavra.pdb
 C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\bin\Debug\net7.0\Antlr3.Runtime.dll
 C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\bin\Debug\net7.0\Antlr4.Runtime.Standard.dll
-C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.csproj.AssemblyReference.cache
-C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.AssemblyInfoInputs.cache
-C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.AssemblyInfo.cs
-C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.csproj.CoreCompileInputs.cache
-C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.sourcelink.json
 C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.csproj.CopyComplete
 C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\BTEJA_Petr_Vavra.dll
 C:\Users\Peťa\Documents\TerkaApp\BTEJA_Petr_Vavra_GIT\BTEJA_Petr_Vavra\obj\Debug\net7.0\refint\BTEJA_Petr_Vavra.dll

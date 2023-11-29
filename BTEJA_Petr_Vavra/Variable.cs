@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BTEJA_Petr_Vavra
 {
-    public class Variable
+    public class Variable :ICloneable
     {
 
         //ident
@@ -25,5 +25,66 @@ namespace BTEJA_Petr_Vavra
             ArrayValues = new List<object?>();
         }
 
+        public Variable DeepCopy()
+        {
+            Variable copy = new Variable();
+            copy.Name = this.Name;
+            copy.Value = DeepCopyValue(this.Value); // Metoda pro hlubokou kopii hodnoty
+            copy.DataType = this.DataType;
+            copy.ArraySize = this.ArraySize;
+
+            if (this.ArrayValues != null)
+            {
+                copy.ArrayValues = new List<object?>(this.ArrayValues.Select(DeepCopyValue));
+            }
+
+            copy.ArrayType = this.ArrayType;
+
+            return copy;
+        }
+
+        private object? DeepCopyValue(object? value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            // Pokud je hodnota typu string nebo je to hodnota value type, nepotřebujeme hlubokou kopii
+            if (value is string || value.GetType().IsValueType)
+            {
+                return value;
+            }
+
+            // Pokud je hodnota reference type, provést hlubokou kopii
+            if (value is ICloneable cloneable)
+            {
+                return cloneable.Clone();
+            }
+
+            if (value is object)
+            {
+                return value;
+            }
+
+            // V případě, že hodnota není typu string, value type ani ICloneable, záleží na tom, jak chceš hlubokou kopii implementovat
+            // Můžeš například použít serializaci/deserializaci nebo vytvořit vlastní hlubokou kopii, podle potřeby.
+
+            throw new ArgumentException("Nelze provést hlubokou kopii hodnoty neznámého typu.");
+        }
+
+        public object Clone()
+        {
+            Variable variable = new Variable();
+            variable.Name = this.Name;
+            variable.Value = this.Value;
+            variable.DataType = this.DataType;
+            variable.ArraySize = this.ArraySize;
+            variable.ArrayValues = this.ArrayValues;
+            variable.ArrayType = this.ArrayType;
+            return variable;
+
+
+        }
     }
 }

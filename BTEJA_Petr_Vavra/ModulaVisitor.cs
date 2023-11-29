@@ -80,12 +80,23 @@ namespace BTEJA_Petr_Vavra
                 if (arrayType != DataType.ARRAY)
                 {
                     variableArray.ArrayType = arrayType;
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        variableArray.ArrayValues.Add(null);
+                    }
                     return variableArray;
                 }
                 else if (arrayType == DataType.ARRAY)
                 {
                     variableArray.ArrayType = DataType.ARRAY;
-                    variableArray.Value = VisitArray(context.type().array());
+
+                    Variable varNew = (Variable)VisitArray(context.type().array());
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        Variable varCopy = varNew.DeepCopy();
+                        variableArray.ArrayValues.Add(varCopy);
+                    }
+
                 }
                 return variableArray;
             }
@@ -103,16 +114,45 @@ namespace BTEJA_Petr_Vavra
         public override object VisitAssignment([NotNull] Modula2Parser.AssignmentContext context)
         {
             var varName = context.ident().GetText();
-            var value = VisitExpression(context.expression(0));
+            var value = VisitExpression(context.expression());
             Console.WriteLine(varName + " s hodnotou: " + value);
 
             //doufejme že nikdy nebudu potřebovat tagat variable objekt místo hodnoty..
             //Variable varFind = (Variable)VisitIdent(context.ident());
             Variable varFind = Variables.Find(variable => variable.Name == varName);
 
-            //kontrola datových typů
-
+            //oto je pro případ když se jedná o pole
             Type valueType = value.GetType();
+            if (varFind.DataType == DataType.ARRAY)
+            {
+                List<int> arrayIndexes = new List<int>();
+
+                foreach (var index in context.arrayAccess())
+                {
+                    arrayIndexes.Add((int)VisitArrayAccess(index));
+                }
+
+                if (arrayIndexes.Count > 1)
+                {
+                    Variable finalFound = varFind;
+
+                    for (int i = 0; i < arrayIndexes.Count; i++)
+                    {
+                        finalFound = (Variable)finalFound.ArrayValues[arrayIndexes[i]];
+
+                    }
+                    finalFound.ArrayValues[arrayIndexes.Last()] = value;
+                }
+                else
+                {
+                    varFind.ArrayValues[arrayIndexes[0]] = value;
+                }
+
+                return null;
+            }
+
+
+            //kontrola datových typů
             if (
                         !((valueType == typeof(int) && varFind.DataType == DataType.INTEGER)
                         || (valueType == typeof(String) && varFind.DataType == DataType.CHAR)
@@ -152,6 +192,7 @@ namespace BTEJA_Petr_Vavra
 
             return null;
         }
+
 
         public override object VisitType([NotNull] Modula2Parser.TypeContext context)
         {

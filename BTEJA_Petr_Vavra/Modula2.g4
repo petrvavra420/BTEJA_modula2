@@ -6,7 +6,7 @@ statement: varStatement | assignment | ifStatement | forStatement | procedureDec
 
 varStatement: 'VAR' ident ':' type (':=' (expression | procedureCall))?;
 
-assignment: ident ('[' expression ']')? ':=' (expression | procedureCall);
+assignment: ident ('[' arrayAccess ']')* ':=' (expression | procedureCall);
 
 ifStatement: 'IF' condition 'THEN' ifBlock ('ELSIF' condition 'THEN' elseIfBlock)* ('ELSE' elseBlock)? 'END';
 
@@ -30,7 +30,9 @@ expression: term ((addOp) term)*;
 
 term: factor ((multOp) factor)*;
 
-factor: procedureCall | string | character | realNumber | number | ident ('[' expression ']')? | '(' expression ')';
+factor: procedureCall | string | character | realNumber | number | ident ('[' arrayAccess ']')* | '(' expression ')';
+
+arrayAccess: expression;
 
 ident: IDENTIFIER+;  
 IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;

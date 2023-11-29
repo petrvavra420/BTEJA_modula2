@@ -128,6 +128,12 @@ public interface IModula2Visitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitFactor([NotNull] Modula2Parser.FactorContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="Modula2Parser.arrayAccess"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitArrayAccess([NotNull] Modula2Parser.ArrayAccessContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="Modula2Parser.ident"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

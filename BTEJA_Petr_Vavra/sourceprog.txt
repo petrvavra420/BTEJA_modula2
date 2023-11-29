@@ -1,1 +1,8 @@
-VAR pole : ARRAY 10 OF ARRAY 5 OF INTEGER;
+VAR pole : ARRAY 10 OF INTEGER;
+
+
+pole[0] := 10;
+
+
+
+WriteOut(pole[1]);
