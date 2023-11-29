@@ -240,6 +240,18 @@ public partial class Modula2BaseListener : IModula2Listener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitArrayAccess([NotNull] Modula2Parser.ArrayAccessContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="Modula2Parser.arrayIndexAccess"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterArrayIndexAccess([NotNull] Modula2Parser.ArrayIndexAccessContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="Modula2Parser.arrayIndexAccess"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitArrayIndexAccess([NotNull] Modula2Parser.ArrayIndexAccessContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="Modula2Parser.ident"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

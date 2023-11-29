@@ -1,8 +1,19 @@
+
+VAR polePoli : ARRAY 10 OF ARRAY 10 OF INTEGER;
+
+polePoli[0][0] := 10;
+WriteOut("polePoli[0][0]:  ",polePoli[0][0]);
+
 VAR pole : ARRAY 10 OF INTEGER;
 
+FOR i := 0 TO 10 BY 1 DO
+pole[i] := i;
+END;
 
-pole[0] := 10;
+FOR i := 0 TO 10 BY 1 DO
+WriteOut("pole[", i ,"]:  ",pole[i]);
+END;
 
-
-
-WriteOut(pole[1]);
+FOR i := 0 TO 10 BY 1 DO
+WriteOut("CISLO", i);
+END;

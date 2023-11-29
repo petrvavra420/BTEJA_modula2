@@ -30,9 +30,10 @@ expression: term ((addOp) term)*;
 
 term: factor ((multOp) factor)*;
 
-factor: procedureCall | string | character | realNumber | number | ident ('[' arrayAccess ']')* | '(' expression ')';
+factor: procedureCall | string | character | realNumber | number | ident | '(' expression ')' | arrayIndexAccess;
 
 arrayAccess: expression;
+arrayIndexAccess: ident ('[' arrayAccess ']')*;
 
 ident: IDENTIFIER+;  
 IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;

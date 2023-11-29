@@ -201,6 +201,16 @@ public interface IModula2Listener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitArrayAccess([NotNull] Modula2Parser.ArrayAccessContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="Modula2Parser.arrayIndexAccess"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterArrayIndexAccess([NotNull] Modula2Parser.ArrayIndexAccessContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="Modula2Parser.arrayIndexAccess"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitArrayIndexAccess([NotNull] Modula2Parser.ArrayIndexAccessContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="Modula2Parser.ident"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

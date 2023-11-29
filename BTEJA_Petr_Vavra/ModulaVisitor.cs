@@ -136,7 +136,7 @@ namespace BTEJA_Petr_Vavra
                 {
                     Variable finalFound = varFind;
 
-                    for (int i = 0; i < arrayIndexes.Count; i++)
+                    for (int i = 0; i < arrayIndexes.Count - 1; i++)
                     {
                         finalFound = (Variable)finalFound.ArrayValues[arrayIndexes[i]];
 
@@ -193,6 +193,47 @@ namespace BTEJA_Petr_Vavra
             return null;
         }
 
+        public override object VisitArrayIndexAccess([NotNull] Modula2Parser.ArrayIndexAccessContext context)
+        {
+            var varName = context.ident().GetText();
+
+            //doufejme že nikdy nebudu potřebovat tagat variable objekt místo hodnoty..
+            //Variable varFind = (Variable)VisitIdent(context.ident());
+            Variable varFind = Variables.Find(variable => variable.Name == varName);
+
+            //oto je pro případ když se jedná o pole
+            if (varFind.DataType == DataType.ARRAY)
+            {
+                List<int> arrayIndexes = new List<int>();
+
+                foreach (var index in context.arrayAccess())
+                {
+                    arrayIndexes.Add((int)VisitArrayAccess(index));
+                }
+
+                if (arrayIndexes.Count > 1)
+                {
+                    Variable finalFound = varFind;
+
+                    for (int i = 0; i < arrayIndexes.Count - 1; i++)
+                    {
+                        finalFound = (Variable)finalFound.ArrayValues[arrayIndexes[i]];
+
+                    }
+                    return finalFound.ArrayValues[arrayIndexes.Last()];
+                }
+                else
+                {
+                    return varFind.ArrayValues[arrayIndexes[0]];
+                }
+
+                return null;
+            }
+
+
+
+            return base.VisitArrayIndexAccess(context);
+        }
 
         public override object VisitType([NotNull] Modula2Parser.TypeContext context)
         {
@@ -458,6 +499,7 @@ namespace BTEJA_Petr_Vavra
             {
                 foreach (var statement in context.statement())
                 {
+                    variable.Value = i;
                     VisitStatement(statement);
                 }
             }
