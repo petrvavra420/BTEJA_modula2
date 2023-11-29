@@ -54,8 +54,52 @@ namespace BTEJA_Petr_Vavra
                 }
                 Variables.Add(varNew);
             }
+            else if (dataType == DataType.ARRAY)
+            {
+                Console.WriteLine("JE TO POLE VOLE" + context + "dALSIkl: " + context.expression());
+                Variable arrayVar = (Variable)VisitArray(context.type().array());
+                arrayVar.Name = identifier;
+                Variables.Add(arrayVar);
+            }
+
+
             return null;
         }
+
+        public override object VisitArray([NotNull] Modula2Parser.ArrayContext context)
+        {
+            int arraySize = (int)VisitExpression(context.expression());
+            DataType arrayType = (DataType)VisitType(context.type());
+            //musíme zkontrolovat jestli není null kvůli zajímavě napsané gramatice kde expression nemusí existovat
+            if (arraySize != null)
+            {
+                Console.WriteLine("VELIKOST POLE: " + arraySize + " TYP: " + arrayType);
+                Variable variableArray = new Variable();
+                variableArray.ArraySize = arraySize;
+                variableArray.DataType = DataType.ARRAY;
+                if (arrayType != DataType.ARRAY)
+                {
+                    variableArray.ArrayType = arrayType;
+                    return variableArray;
+                }
+                else if (arrayType == DataType.ARRAY)
+                {
+                    variableArray.ArrayType = DataType.ARRAY;
+                    variableArray.Value = VisitArray(context.type().array());
+                }
+                return variableArray;
+            }
+            else
+            {
+                throw new Exception("Invalid definiton of array.");
+            }
+            return null;
+
+
+        }
+
+
+
         public override object VisitAssignment([NotNull] Modula2Parser.AssignmentContext context)
         {
             var varName = context.ident().GetText();
@@ -67,6 +111,7 @@ namespace BTEJA_Petr_Vavra
             Variable varFind = Variables.Find(variable => variable.Name == varName);
 
             //kontrola datových typů
+
             Type valueType = value.GetType();
             if (
                         !((valueType == typeof(int) && varFind.DataType == DataType.INTEGER)
@@ -75,7 +120,31 @@ namespace BTEJA_Petr_Vavra
                         || (valueType == typeof(int) && varFind.DataType == DataType.REAL)
                         )
                         )
+
             {
+                if (valueType == typeof(String) && varFind.DataType == DataType.INTEGER)
+                {
+                    try
+                    {
+                        int parsedInt = int.Parse((string)value);
+                        varFind.Value = parsedInt;
+                        return null;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                else if (valueType == typeof(String) && varFind.DataType == DataType.REAL)
+                {
+                    //snad nebude v budoucnu dělat problém kvůli kultuře
+                    if (float.TryParse((string)value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float parsedFloat))
+                    {
+                        varFind.Value = parsedFloat;
+                        return null;
+                    }
+                }
+
+
                 throw new Exception("Invalid value assigned.");
             }
 
@@ -98,11 +167,13 @@ namespace BTEJA_Petr_Vavra
                 case "CHAR":
                     return DataType.CHAR;
                     break;
-                case "ARRAY":
-                    return DataType.ARRAY;
-                    break;
                 default:
                     break;
+            }
+
+            if (dataTypeText.Substring(0, 5) == "ARRAY")
+            {
+                return DataType.ARRAY;
             }
             return base.VisitType(context);
         }
@@ -736,13 +807,13 @@ namespace BTEJA_Petr_Vavra
                 {
                     procedureBody.Add(statement);
                 }
-            }   
+            }
             //zjistíme návratovou hodnotu pokud existuje, jinak null
             object? returnExpression = null;
             if (context.expression() != null)
             {
                 returnExpression = context.expression();
-            }   
+            }
 
             //vytvoříme proceduru
             Procedure procedure = new Procedure();
@@ -757,6 +828,121 @@ namespace BTEJA_Petr_Vavra
             Console.WriteLine("---DEBUG: Name: " + procedureName + ", VarFormals: " + varFormals + "returnType: " + returnType
                 + ", Body: " + procedureBody + ", ReturnExpression: " + returnExpression);
             return null;
+        }
+
+
+        //procedureCall: (ident '.')* ident '(' (expression (',' expression)*)? ')';
+        public override object VisitProcedureCall([NotNull] Modula2Parser.ProcedureCallContext context)
+        {
+            //zjistíme název procedury(veškeré identy oddělené tečkou)
+            List<string> procedureNames = new List<string>();
+            for (int i = 0; i < context.ident().Length; i++)
+            {
+                procedureNames.Add(context.ident(i).GetText());
+            }
+
+            //zjistíme parametry
+            List<object?> parameters = new List<object?>();
+            foreach (var expression in context.expression())
+            {
+                parameters.Add(VisitExpression(expression));
+            }
+
+            Console.WriteLine("--DEBUG: delka ident pole: " + context.ident().Length);
+
+
+
+
+
+            //zjistíme proceduru(aktuálně udělané tak, že se bere pouze poslední identifikátor)
+            Procedure procedure = Procedures.Find(procedure => procedure.Name == procedureNames[context.ident().Length - 1]);
+
+            //pokud se jedná o předdefinovanou proceduru WriteOut, vypíšeme hodnotu na jednu řádku
+            if (procedureNames[context.ident().Length - 1] == "WriteOut")
+            {
+                foreach (var parameter in parameters)
+                {
+                    Console.Write(parameter);
+                }
+                return null;
+            }
+            //pokud se jedná o předdefinovanou proceduru WriteLine, vypíšeme hodnotu na jednu řádku
+            if (procedureNames[context.ident().Length - 1] == "WriteLine")
+            {
+                Console.WriteLine();
+                return null;
+            }
+            //pokud se jedná o předdefinovanou proceduru ReadIn, načteme hodnotu
+            if (procedureNames[context.ident().Length - 1] == "ReadIn")
+            {
+                string input = Console.ReadLine();
+                return input;
+            }
+
+
+            if (procedure != null)
+            {
+                //zjistíme jestli máme stejný počet parametrů
+                if (procedure.VarFormals.Count == parameters.Count)
+                {
+                    //zjistíme jestli jsou parametry stejného typu
+                    for (int i = 0; i < procedure.VarFormals.Count; i++)
+                    {
+                        //zjistíme typ parametru
+                        DataType parameterType = procedure.VarFormals[i].Type;
+                        //zjistíme typ hodnoty
+                        Type valueType = parameters[i].GetType();
+                        //pokud se typy nerovnají, vyhodíme chybu
+                        if (
+                            !((valueType == typeof(int) && parameterType == DataType.INTEGER)
+                            || (valueType == typeof(String) && parameterType == DataType.CHAR)
+                            || (valueType == typeof(float) && parameterType == DataType.REAL)
+                            || (valueType == typeof(int) && parameterType == DataType.REAL)
+                            )
+                            )
+                        {
+                            throw new Exception("Invalid value assigned(probably different data type).");
+                        }
+                    }
+                }
+                else
+                {
+                    throw new Exception("Invalid number of parameters.");
+                }
+            }
+            else
+            {
+                throw new Exception("Procedure " + procedureNames[context.ident().Length - 1] + " is not defined.");
+            }
+
+
+
+            //return base.VisitProcedureCall(context);
+
+            Console.WriteLine("---DEBUG: procedureNames: " + procedureNames + ", parameters: " + parameters);
+
+            //pokud je vše v pořádku, provedeme proceduru
+            foreach (var statement in procedure.Body)
+            {
+                VisitStatement((Modula2Parser.StatementContext)statement);
+            }
+
+            //pokud je návratový typ NULL, vracíme NULL
+            if (procedure.ReturnType == DataType.NULL)
+            {
+                return null;
+            }
+            //pokud není NULL, vracíme hodnotu
+            else
+            {
+                return procedure.ReturnExpression;
+            }
+
+            //TODO lokální kontext proměnné, které jsou v proceduře definované a předávání hodnot do procedury
+
+
+
+
         }
 
         public override object VisitVarFormal([NotNull] Modula2Parser.VarFormalContext context)

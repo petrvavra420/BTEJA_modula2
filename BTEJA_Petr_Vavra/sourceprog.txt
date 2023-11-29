@@ -1,3 +1,1 @@
-VARa teaasdsst : INTEGER := 100;
-
-
+VAR pole : ARRAY 10 OF ARRAY 5 OF INTEGER;

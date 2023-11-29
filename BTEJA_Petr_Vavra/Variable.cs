@@ -14,9 +14,15 @@ namespace BTEJA_Petr_Vavra
         public object? Value { get; set; }
         public DataType DataType { get; set; }
 
+        //array
+        public int? ArraySize { get; set; }
+        public List<object?> ArrayValues { get; set; }
+        public DataType ArrayType { get; set; }
+
         public Variable()
         {
-
+            ArraySize = null;
+            ArrayValues = new List<object?>();
         }
 
     }

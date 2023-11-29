@@ -1,11 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "P2QpZCe3Prl2Ek+qHTQAG6cd/gNhXBrunmlAg4t7JKrbvLHGhokMK5ieqFU1D/6uG1Awn/cOf/aUvihuJ2z3RQ==",
+  "dgSpecHash": "g7RwnD7Rea+cn4QZL+LlI+VW6pYHHLSWW23U8u72QknMRNoCnJsEIU0hAbxqIYBqGUH3onU8rPA9/YnCo3abfQ==",
   "success": true,
-  "projectFilePath": "C:\\xampp\\htdocs\\BSWS\\bswsProjekt\\BTEJA_modula2\\BTEJA_Petr_Vavra\\BTEJA_Petr_Vavra.csproj",
+  "projectFilePath": "C:\\Users\\Peťa\\Documents\\TerkaApp\\BTEJA_Petr_Vavra_GIT\\BTEJA_Petr_Vavra\\BTEJA_Petr_Vavra.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Skola\\.nuget\\packages\\antlr\\3.5.0.2\\antlr.3.5.0.2.nupkg.sha512",
-    "C:\\Users\\Skola\\.nuget\\packages\\antlr4.runtime.standard\\4.13.1\\antlr4.runtime.standard.4.13.1.nupkg.sha512"
+    "C:\\Users\\Peťa\\.nuget\\packages\\antlr\\3.5.0.2\\antlr.3.5.0.2.nupkg.sha512",
+    "C:\\Users\\Peťa\\.nuget\\packages\\antlr4.runtime.standard\\4.13.1\\antlr4.runtime.standard.4.13.1.nupkg.sha512",
+    "C:\\Users\\Peťa\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.14\\microsoft.windowsdesktop.app.ref.7.0.14.nupkg.sha512",
+    "C:\\Users\\Peťa\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.14\\microsoft.netcore.app.ref.7.0.14.nupkg.sha512",
+    "C:\\Users\\Peťa\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.14\\microsoft.aspnetcore.app.ref.7.0.14.nupkg.sha512",
+    "C:\\Users\\Peťa\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\7.0.14\\microsoft.netcore.app.host.win-x64.7.0.14.nupkg.sha512"
   ],
   "logs": [
     {
