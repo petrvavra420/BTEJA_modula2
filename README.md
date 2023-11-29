@@ -9,7 +9,7 @@ Proměnné:
       - nějak blbnou záporná čísla při inicializaci
   - CHAR ✅
   - REAL ✅
-  - ARRAY ❌
+  - ARRAY ✅
   - inicilizace výrazem ✅
 
 Operace:
@@ -37,11 +37,11 @@ Struktury:
       - WriteOut ✅
       - ReadIn ✅
       - je potřeba ošetřit vytváření metod s názvy "write" a "read" ❌
-  -  Volání funkcí ❌
+  -  Volání funkcí ✅
       - zde je potřeba dořešit problém s globálními/lokálními proměnnými. ❌
       - funkce lze volat ✅
       - neumí správně pracovat s parametry pokud se nejedná o globální proměnné ❌
-  -  Lokální/globální proměnné ❌
+  -  Lokální/globální proměnné ❌❌❌
   -  Výpis do konzole ✅
   -  Čtení z konzole ✅
     
