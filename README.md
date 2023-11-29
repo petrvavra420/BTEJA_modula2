@@ -33,9 +33,15 @@ Struktury:
           - not equals ✅
         
   -  FOR cyklus ✅
-  -  Definice funkcí ❌
+  -  Definice funkcí ✅
+      - WriteOut ✅
+      - ReadIn ✅
+      - je potřeba ošetřit vytváření metod s názvy "write" a "read" ❌
   -  Volání funkcí ❌
+      - zde je potřeba dořešit problém s globálními/lokálními proměnnými. ❌
+      - funkce lze volat ✅
+      - neumí správně pracovat s parametry pokud se nejedná o globální proměnné ❌
   -  Lokální/globální proměnné ❌
-  -  Výpis do konzole ❌
-  -  Čtení z konzole ❌
+  -  Výpis do konzole ✅
+  -  Čtení z konzole ✅
     
