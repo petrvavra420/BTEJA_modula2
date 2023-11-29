@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Peťa\\Documents\\TerkaApp\\BTEJA_Petr_Vavra_GIT\\BTEJA_Petr_Vavra\\BTEJA_Petr_Vavra.csproj": {}
+    "C:\\xampp\\htdocs\\BSWS\\bswsProjekt\\BTEJA_modula2\\BTEJA_Petr_Vavra\\BTEJA_Petr_Vavra.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Peťa\\Documents\\TerkaApp\\BTEJA_Petr_Vavra_GIT\\BTEJA_Petr_Vavra\\BTEJA_Petr_Vavra.csproj": {
+    "C:\\xampp\\htdocs\\BSWS\\bswsProjekt\\BTEJA_modula2\\BTEJA_Petr_Vavra\\BTEJA_Petr_Vavra.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Peťa\\Documents\\TerkaApp\\BTEJA_Petr_Vavra_GIT\\BTEJA_Petr_Vavra\\BTEJA_Petr_Vavra.csproj",
+        "projectUniqueName": "C:\\xampp\\htdocs\\BSWS\\bswsProjekt\\BTEJA_modula2\\BTEJA_Petr_Vavra\\BTEJA_Petr_Vavra.csproj",
         "projectName": "BTEJA_Petr_Vavra",
-        "projectPath": "C:\\Users\\Peťa\\Documents\\TerkaApp\\BTEJA_Petr_Vavra_GIT\\BTEJA_Petr_Vavra\\BTEJA_Petr_Vavra.csproj",
-        "packagesPath": "C:\\Users\\Peťa\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Peťa\\Documents\\TerkaApp\\BTEJA_Petr_Vavra_GIT\\BTEJA_Petr_Vavra\\obj\\",
+        "projectPath": "C:\\xampp\\htdocs\\BSWS\\bswsProjekt\\BTEJA_modula2\\BTEJA_Petr_Vavra\\BTEJA_Petr_Vavra.csproj",
+        "packagesPath": "C:\\Users\\Skola\\.nuget\\packages\\",
+        "outputPath": "C:\\xampp\\htdocs\\BSWS\\bswsProjekt\\BTEJA_modula2\\BTEJA_Petr_Vavra\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Peťa\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Skola\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -64,24 +60,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[7.0.14, 7.0.14]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[7.0.14, 7.0.14]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[7.0.14, 7.0.14]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[7.0.14, 7.0.14]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"

@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace BTEJA_Petr_Vavra
 {
-    public enum DataType
+    public class VarFormal
     {
-        INTEGER,
-        CHAR,
-        REAL,
-        ARRAY,
-        NULL
+        public string Name { get; set; }
+        public DataType Type { get; set; }
     }
 }

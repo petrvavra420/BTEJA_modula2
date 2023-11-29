@@ -16,6 +16,7 @@ namespace BTEJA_Petr_Vavra
     {
 
         private List<Variable> Variables { get; } = new List<Variable>();
+        private List<Procedure> Procedures { get; } = new List<Procedure>();
 
 
         //TODO POLE
@@ -383,7 +384,7 @@ namespace BTEJA_Petr_Vavra
                 //        //    VisitIfBlock(statement);
                 //        //}
                 //        //Visit(else);
-                        
+
                 //        Visit(context.elseIfBlock(conditionCount - 1));
 
                 //        return null;
@@ -700,5 +701,73 @@ namespace BTEJA_Petr_Vavra
         }
 
 
+        //procedureDeclaration: 'PROCEDURE' ident ( '(' varFormal (';' varFormal)* ')' )? (':' type)? ';' 'BEGIN' (statement ';')+ ('RETURN' expression ';')? 'END' ident;
+
+        public override object VisitProcedureDeclaration([NotNull] Modula2Parser.ProcedureDeclarationContext context)
+        {
+            //zjistíme název procedury
+            string procedureName = context.ident(0).GetText();
+
+            //vytváříme list pro parametry
+            List<VarFormal> varFormals = new List<VarFormal>();
+            //pokud existují parametry, načteme je
+            foreach (var varFormal in context.varFormal())
+            {
+                object varFormalObject = VisitVarFormal(varFormal);
+                if (varFormalObject != null)
+                {
+                    varFormals.Add((VarFormal)varFormalObject);
+                }
+                Console.WriteLine("---DEBUG: varFormal: " + varFormal.GetText());
+            }
+
+            //zjistíme návratový typ pokud existuje, jinak null
+            DataType returnType = DataType.NULL;
+            if (context.type() != null)
+            {
+                returnType = (DataType)VisitType(context.type());
+            }
+
+            //zjistíme tělo procedury
+            List<object?> procedureBody = new List<object?>();
+            foreach (var statement in context.statement())
+            {
+                if (statement != null)
+                {
+                    procedureBody.Add(statement);
+                }
+            }   
+            //zjistíme návratovou hodnotu pokud existuje, jinak null
+            object? returnExpression = null;
+            if (context.expression() != null)
+            {
+                returnExpression = context.expression();
+            }   
+
+            //vytvoříme proceduru
+            Procedure procedure = new Procedure();
+            procedure.Name = procedureName;
+            procedure.VarFormals = varFormals;
+            procedure.ReturnType = returnType;
+            procedure.Body = procedureBody;
+            procedure.ReturnExpression = returnExpression;
+
+            Procedures.Add(procedure);
+
+            Console.WriteLine("---DEBUG: Name: " + procedureName + ", VarFormals: " + varFormals + "returnType: " + returnType
+                + ", Body: " + procedureBody + ", ReturnExpression: " + returnExpression);
+            return null;
+        }
+
+        public override object VisitVarFormal([NotNull] Modula2Parser.VarFormalContext context)
+        {
+            string varFormalName = context.ident().GetText();
+            DataType varFormalDataType = (DataType)VisitType(context.type());
+            VarFormal varFormal = new VarFormal();
+            varFormal.Name = varFormalName;
+            varFormal.Type = varFormalDataType;
+            Console.WriteLine("---DEBUG: varFormalName: " + varFormalName + ", varFormalDataType: " + varFormalDataType);
+            return varFormal;
+        }
     }
 }
