@@ -9,7 +9,7 @@ Proměnné:
       - nějak blbnou záporná čísla při inicializaci
   - CHAR ✅
   - REAL ✅
-  - ARRAY ❌
+  - ARRAY ✅
   - inicilizace výrazem ✅
 
 Operace:
