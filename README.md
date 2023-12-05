@@ -1,5 +1,5 @@
 ❌# BTEJA_modula2❌
-- Uchovávání proměnných ✅
+- Uchovávání proměnných/procedur ✅
 - Kontrola datových typů při přiřazení do promměné ✅
 - Kontrola existence proměnných při přiřazení ✅
 - Stringy? ❌
@@ -7,10 +7,11 @@
 
 Proměnné:
   - INTEGER ✅
-      - nějak blbnou záporná čísla při inicializaci
+      - nějak blbnou záporná čísla při inicializaci❌
   - CHAR ✅
   - REAL ✅
   - ARRAY ✅
+    - vícerozměrné pole ✅
   - inicilizace výrazem ✅
 
 Operace:
