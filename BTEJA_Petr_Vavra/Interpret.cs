@@ -14,7 +14,7 @@ namespace BTEJA_Petr_Vavra
         static void Main(string[] args)
         {
             // Display the number of command line arguments.
-            Console.WriteLine("TEST");
+            Console.WriteLine("Začátek programu");
             string filePath = "..\\..\\..\\sourceprog.txt"; 
             string fileContents = File.ReadAllText(filePath);
 
@@ -24,8 +24,10 @@ namespace BTEJA_Petr_Vavra
             Modula2Parser parser = new Modula2Parser(tokens);
             Modula2Parser.ProgramContext gramatikaContext = parser.program();
            ModulaVisitor visitor = new ModulaVisitor();
-            visitor.Visit(gramatikaContext);
+            visitor.symbolTables.Push(new SymbolTable());
 
+            visitor.Visit(gramatikaContext);
+            
             }
 
     }

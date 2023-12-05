@@ -1,19 +1,29 @@
 
-VAR polePoli : ARRAY 10 OF ARRAY 10 OF INTEGER;
 
-polePoli[0][0] := 10;
-WriteOut("polePoli[0][0]:  ",polePoli[0][0]);
 
-VAR pole : ARRAY 10 OF INTEGER;
 
-FOR i := 0 TO 10 BY 1 DO
-pole[i] := i;
+VAR polePolich : ARRAY 5 OF ARRAY 5 OF INTEGER;
+polePolich[0][0] := 1;
+polePolich[0][1] := 2;
+polePolich[0][2] := 3;
+polePolich[0][3] := 4;
+polePolich[0][4] := 5;
+polePolich[1][3] := 6;
+
+
+FOR i := 0 TO 5 BY 1 DO
+ FOR j := 0 TO 5 BY 1 DO
+  WriteOut(polePolich[i][j]);
+ END;
 END;
 
-FOR i := 0 TO 10 BY 1 DO
-WriteOut("pole[", i ,"]:  ",pole[i]);
-END;
 
-FOR i := 0 TO 10 BY 1 DO
-WriteOut("CISLO", i);
-END;
+
+
+
+
+
+
+
+
+

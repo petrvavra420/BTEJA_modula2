@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
@@ -15,115 +16,156 @@ namespace BTEJA_Petr_Vavra
     public class ModulaVisitor : Modula2BaseVisitor<object?>
     {
 
+        //zásobník tabulek symbolů(proměnné a procedury)  
+        public Stack<SymbolTable> symbolTables = new Stack<SymbolTable>();
+        public List<string> builtInProcedures = new List<string>() { "ReadIn", "WriteOut", "WriteLine" };
+
+
+
+        //již se nepoužívá
         private List<Variable> Variables { get; } = new List<Variable>();
         private List<Procedure> Procedures { get; } = new List<Procedure>();
 
 
         //TODO POLE
         //POLE CHECK TYPŮ?
-        public override object VisitVarStatement([NotNull] Modula2Parser.VarStatementContext context)
+        public override object VisitVarStatement(Modula2Parser.VarStatementContext context)
         {
             string substrVAR = context.GetText().Substring(0, 3);
 
             var identifier = context.ident().GetText();
             DataType dataType = (DataType)VisitType(context.type());
+
             //pokud není pole
             if (dataType != DataType.ARRAY)
             {
                 Variable varNew = new Variable();
                 varNew.Name = identifier;
                 varNew.DataType = dataType;
-                //pokud obsahuje i inicializaci tak načteme expr
+
+                //pokud obsahuje i inicializaci, načteme expr
                 if (context.GetText().Contains(":="))
                 {
-                    //načtení hodnoty
+                    // načtení hodnoty
                     varNew.Value = VisitExpression(context.expression());
-                    //kontrola přiřazení správné hodnoty dle datového typu
+
+                    // kontrola přiřazení správné hodnoty dle datového typu
                     Type valueType = varNew.Value.GetType();
                     if (
                         !((valueType == typeof(int) && varNew.DataType == DataType.INTEGER)
-                        || (valueType == typeof(String) && varNew.DataType == DataType.CHAR)
+                        || (valueType == typeof(string) && varNew.DataType == DataType.CHAR)
                         || (valueType == typeof(float) && varNew.DataType == DataType.REAL)
                         || (valueType == typeof(int) && varNew.DataType == DataType.REAL)
                         )
-                        )
+                    )
                     {
                         throw new Exception("Invalid value assigned.");
                     }
-                    Console.WriteLine("TYYYYYYYYP: " + varNew.Value.GetType());
+                    //Console.WriteLine("TYYYYYYYYP: " + varNew.Value.GetType());
                 }
-                Variables.Add(varNew);
+
+                // Přidání proměnné do SymbolTable aktuálního kontextu
+
+
+                //zkontroluji jestli je v tabulce symbolů na spodu zásobníku proměnná se stejným názvem, pokud ano, vyhodím chybu
+                var symbolTablesList = symbolTables.ToList();
+
+                if (symbolTablesList.Last().VariableExists(varNew.Name))
+                {
+                    throw new Exception("Variable " + varNew.Name + " already exists.");
+                }
+                else
+                {
+                    //pokud ne, přidám proměnnou do tabulky symbolů aktuálního kontextu
+                    symbolTables.Peek().AddVariable(varNew);
+
+                }
+
             }
             else if (dataType == DataType.ARRAY)
             {
-                Console.WriteLine("JE TO POLE VOLE" + context + "dALSIkl: " + context.expression());
+                //Console.WriteLine("JE TO POLE" + context + "dALSIkl: " + context.expression());
+                // Předpokládám, že VisitArray vrací objekt typu Variable nebo podobný
                 Variable arrayVar = (Variable)VisitArray(context.type().array());
                 arrayVar.Name = identifier;
-                Variables.Add(arrayVar);
-            }
 
+                // Přidání pole do SymbolTable aktuálního kontextu
+                symbolTables.Peek().AddVariable(arrayVar);
+            }
 
             return null;
         }
 
-        public override object VisitArray([NotNull] Modula2Parser.ArrayContext context)
+
+        public override object VisitArray(Modula2Parser.ArrayContext context)
         {
             int arraySize = (int)VisitExpression(context.expression());
             DataType arrayType = (DataType)VisitType(context.type());
-            //musíme zkontrolovat jestli není null kvůli zajímavě napsané gramatice kde expression nemusí existovat
+
+            // Musíme zkontrolovat, jestli není null kvůli gramatice, kde expression nemusí existovat
             if (arraySize != null)
             {
-                Console.WriteLine("VELIKOST POLE: " + arraySize + " TYP: " + arrayType);
+                //Console.WriteLine("VELIKOST POLE: " + arraySize + " TYP: " + arrayType);
                 Variable variableArray = new Variable();
                 variableArray.ArraySize = arraySize;
                 variableArray.DataType = DataType.ARRAY;
+
                 if (arrayType != DataType.ARRAY)
                 {
                     variableArray.ArrayType = arrayType;
+
+                    // Přidání pole do SymbolTable aktuálního kontextu
                     for (int i = 0; i < arraySize; i++)
                     {
                         variableArray.ArrayValues.Add(null);
                     }
+
                     return variableArray;
                 }
                 else if (arrayType == DataType.ARRAY)
                 {
                     variableArray.ArrayType = DataType.ARRAY;
 
+                    // Předpokládám, že VisitArray vrací objekt typu Variable nebo podobný
                     Variable varNew = (Variable)VisitArray(context.type().array());
+
                     for (int i = 0; i < arraySize; i++)
                     {
                         Variable varCopy = varNew.DeepCopy();
                         variableArray.ArrayValues.Add(varCopy);
                     }
 
+                    // Přidání pole do SymbolTable aktuálního kontextu
                 }
                 return variableArray;
             }
             else
             {
-                throw new Exception("Invalid definiton of array.");
+                throw new Exception("Invalid definition of array.");
             }
             return null;
-
-
         }
 
 
 
-        public override object VisitAssignment([NotNull] Modula2Parser.AssignmentContext context)
+
+        public override object VisitAssignment(Modula2Parser.AssignmentContext context)
         {
             var varName = context.ident().GetText();
             var value = VisitExpression(context.expression());
-            Console.WriteLine(varName + " s hodnotou: " + value);
+            //Console.WriteLine(varName + " s hodnotou: " + value);
 
-            //doufejme že nikdy nebudu potřebovat tagat variable objekt místo hodnoty..
-            //Variable varFind = (Variable)VisitIdent(context.ident());
-            Variable varFind = Variables.Find(variable => variable.Name == varName);
+            // Dohledání proměnné v aktuálním kontextu
+            Variable varFind = null;
+            foreach (var table in symbolTables)
+            {
+                varFind = table.GetVariable(varName);
+                if (varFind != null)
+                    break;
+            }
 
-            //oto je pro případ když se jedná o pole
-            Type valueType = value.GetType();
-            if (varFind.DataType == DataType.ARRAY)
+            // Pro případ, když se jedná o pole
+            if (varFind?.DataType == DataType.ARRAY)
             {
                 List<int> arrayIndexes = new List<int>();
 
@@ -139,8 +181,8 @@ namespace BTEJA_Petr_Vavra
                     for (int i = 0; i < arrayIndexes.Count - 1; i++)
                     {
                         finalFound = (Variable)finalFound.ArrayValues[arrayIndexes[i]];
-
                     }
+
                     finalFound.ArrayValues[arrayIndexes.Last()] = value;
                 }
                 else
@@ -151,18 +193,17 @@ namespace BTEJA_Petr_Vavra
                 return null;
             }
 
-
-            //kontrola datových typů
+            // Kontrola datových typů
+            Type valueType = value.GetType();
             if (
-                        !((valueType == typeof(int) && varFind.DataType == DataType.INTEGER)
-                        || (valueType == typeof(String) && varFind.DataType == DataType.CHAR)
-                        || (valueType == typeof(float) && varFind.DataType == DataType.REAL)
-                        || (valueType == typeof(int) && varFind.DataType == DataType.REAL)
-                        )
-                        )
-
+                !((valueType == typeof(int) && varFind.DataType == DataType.INTEGER)
+                || (valueType == typeof(string) && varFind.DataType == DataType.CHAR)
+                || (valueType == typeof(float) && varFind.DataType == DataType.REAL)
+                || (valueType == typeof(int) && varFind.DataType == DataType.REAL)
+            ))
             {
-                if (valueType == typeof(String) && varFind.DataType == DataType.INTEGER)
+                // Pokud je hodnota string a typ je integer, zkuste převést
+                if (valueType == typeof(string) && varFind.DataType == DataType.INTEGER)
                 {
                     try
                     {
@@ -172,18 +213,18 @@ namespace BTEJA_Petr_Vavra
                     }
                     catch (Exception)
                     {
+                        // Případná chyba při převodu
                     }
                 }
-                else if (valueType == typeof(String) && varFind.DataType == DataType.REAL)
+                // Pokud je hodnota string a typ je real, zkuste převést s ohledem na kulturu
+                else if (valueType == typeof(string) && varFind.DataType == DataType.REAL)
                 {
-                    //snad nebude v budoucnu dělat problém kvůli kultuře
                     if (float.TryParse((string)value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float parsedFloat))
                     {
                         varFind.Value = parsedFloat;
                         return null;
                     }
                 }
-
 
                 throw new Exception("Invalid value assigned.");
             }
@@ -193,16 +234,23 @@ namespace BTEJA_Petr_Vavra
             return null;
         }
 
-        public override object VisitArrayIndexAccess([NotNull] Modula2Parser.ArrayIndexAccessContext context)
+
+
+        public override object VisitArrayIndexAccess(Modula2Parser.ArrayIndexAccessContext context)
         {
             var varName = context.ident().GetText();
 
-            //doufejme že nikdy nebudu potřebovat tagat variable objekt místo hodnoty..
-            //Variable varFind = (Variable)VisitIdent(context.ident());
-            Variable varFind = Variables.Find(variable => variable.Name == varName);
+            // Dohledání proměnné v aktuálním kontextu
+            Variable varFind = null;
+            foreach (var table in symbolTables)
+            {
+                varFind = table.GetVariable(varName);
+                if (varFind != null)
+                    break;
+            }
 
-            //oto je pro případ když se jedná o pole
-            if (varFind.DataType == DataType.ARRAY)
+            // Pro případ, když se jedná o pole
+            if (varFind?.DataType == DataType.ARRAY)
             {
                 List<int> arrayIndexes = new List<int>();
 
@@ -218,22 +266,21 @@ namespace BTEJA_Petr_Vavra
                     for (int i = 0; i < arrayIndexes.Count - 1; i++)
                     {
                         finalFound = (Variable)finalFound.ArrayValues[arrayIndexes[i]];
-
                     }
+
                     return finalFound.ArrayValues[arrayIndexes.Last()];
                 }
                 else
                 {
                     return varFind.ArrayValues[arrayIndexes[0]];
                 }
-
-                return null;
             }
 
+            // Pokud proměnná není pole, můžete buď vrátit aktuální hodnotu nebo vyhodit chybu, záleží na požadavcích vašeho jazyka.
 
-
-            return base.VisitArrayIndexAccess(context);
+            throw new Exception($"{varName} is not an array.");
         }
+
 
         public override object VisitType([NotNull] Modula2Parser.TypeContext context)
         {
@@ -322,7 +369,6 @@ namespace BTEJA_Petr_Vavra
             }
             throw new Exception("unable to divide " + left + " and " + right);
         }
-
         private object? Multiply(object? left, object? right)
         {
             if (left is int l && right is int r)
@@ -343,7 +389,6 @@ namespace BTEJA_Petr_Vavra
             }
             throw new Exception("unable to multiply " + left + " and " + right);
         }
-
         private object? Negate(object? result)
         {
             if (result is int rInt)
@@ -357,7 +402,6 @@ namespace BTEJA_Petr_Vavra
 
             throw new Exception("unable to negate " + result);
         }
-
         private object? Subtract(object? left, object? right)
         {
             if (left is int l && right is int r)
@@ -378,7 +422,6 @@ namespace BTEJA_Petr_Vavra
             }
             throw new Exception("unable to subtract " + left + " and " + right);
         }
-
         private object? Add(object? left, object? right)
         {
             if (left is int l && right is int r)
@@ -401,23 +444,29 @@ namespace BTEJA_Petr_Vavra
             //Console.WriteLine("typ: " + left.GetType());
             throw new Exception("unable to add " + left + " and " + right);
         }
-
-        public override object VisitIdent([NotNull] Modula2Parser.IdentContext context)
+        public override object VisitIdent(Modula2Parser.IdentContext context)
         {
             var varName = context.GetText();
-            //return varName;
-            Console.WriteLine("identifikator: " + varName);
-            Variable variableFind = Variables.Find(variable => variable.Name == varName);
+            //Console.WriteLine("identifikator: " + varName);
 
+            // Dohledání proměnné v aktuálním kontextu
+            Variable variableFind = null;
+            foreach (var table in symbolTables)
+            {
+                variableFind = table.GetVariable(varName);
+                if (variableFind != null)
+                    break;
+            }
 
             if (variableFind == null)
             {
                 throw new Exception("Variable " + varName + " is not defined.");
             }
+
             return variableFind.Value;
 
-            return base.VisitIdent(context);
         }
+
 
         //public object CheckIdentExistence([NotNull] Modula2Parser.IdentContext context)
         //{
@@ -460,51 +509,77 @@ namespace BTEJA_Petr_Vavra
 
 
         //forStatement: 'FOR' ident ':=' expression 'TO' expression ('BY' expression)? 'DO' (statement ';')+ 'END';
-        public override object VisitForStatement([NotNull] Modula2Parser.ForStatementContext context)
+        public override object VisitForStatement(Modula2Parser.ForStatementContext context)
         {
-            //zjistíme název první proměnné
-            object ident = context.ident().GetText();
-            //zjistíme jestli existuje
-            Variable variable = tryFindVariableByIdent(ident);
-            //pokud neexistuje, vytvoříme a přidáme do seznamu
+
+            // Zjistíme název první proměnné
+            var ident = context.ident().GetText();
+
+            // Dohledání proměnné v aktuálním kontextu
+            Variable variable = null;
+            foreach (var table in symbolTables)
+            {
+                variable = table.GetVariable(ident);
+                if (variable != null)
+                    break;
+            }
+
+            // Pokud proměnná neexistuje, vytvoříme a přidáme do aktuálního kontextu SymbolTable
             if (variable == null)
             {
                 variable = new Variable();
-                variable.Name = (string)ident;
+                variable.Name = ident;
                 variable.DataType = DataType.INTEGER;
-                Variables.Add(variable);
+
+                // Přidání proměnné do aktuálního kontextu SymbolTable
+                symbolTables.Peek().AddVariable(variable);
             }
-            //kontrola pokud už existující proměnná je typu INTEGER
+
+            // Kontrola, zda existující proměnná je typu INTEGER
             if (variable.DataType != DataType.INTEGER)
             {
                 throw new Exception("Existing variable '" + variable.Name + "' is not type INTEGER");
             }
-            //přiřadíme hodnotu
+
+            // Přiřadíme hodnotu
             variable.Value = VisitExpression(context.expression(0));
 
             int rangeFrom = (int)variable.Value;
-            //uložíme si pravou krajní mez FOR cyklu
+            // Uložíme si pravou krajní mez FOR cyklu
             int rangeTo = (int)VisitExpression(context.expression(1));
-            //výchozí hodnota inkrementace bude jedna, není li specifikování "BY" jinak
+            // Výchozí hodnota inkrementace bude jedna, není-li specifikováno "BY" jinak
             int rangeBy = 1;
-            //pokud existuje třetí výraz v definici, budeme předpokládat že se jedná o "BY"
+            // Pokud existuje třetí výraz v definici, budeme předpokládat, že se jedná o "BY"
             if (context.expression(2) != null)
             {
                 rangeBy = (int)VisitExpression(context.expression(2));
             }
 
-            Console.WriteLine("---DEBUG: " + ident + " a hodnota: " + variable.Value + ", TO: " + rangeTo + ", BY: " + rangeBy);
+            //Console.WriteLine("---DEBUG: " + ident + " a hodnota: " + variable.Value + ", TO: " + rangeTo + ", BY: " + rangeBy);
+
+            // Uložení původní hodnoty proměnné pro pozdější obnovení
+            int originalValue = (int)variable.Value;
 
             for (int i = rangeFrom; i < rangeTo; i += rangeBy)
             {
+                // Vytvoření nového kontextu SymbolTable pro nový blok
+                symbolTables.Push(new SymbolTable());
                 foreach (var statement in context.statement())
                 {
+                    // Nastavení aktuální hodnoty proměnné pro iteraci
                     variable.Value = i;
                     VisitStatement(statement);
                 }
+                // Odstranění kontextu SymbolTable pro nový blok
+                symbolTables.Pop();
             }
+
+            // Obnovení původní hodnoty proměnné
+            variable.Value = originalValue;
+
             return null;
         }
+
 
 
         //ifStatement: 'IF' condition 'THEN' (statement ';')+ ('ELSIF' condition 'THEN' (statement ';')+)* ('ELSE' (statement ';')+)? 'END';
@@ -516,55 +591,37 @@ namespace BTEJA_Petr_Vavra
             //zkontrolujeme první IF, pokud je TRUE, provedeme všechny příkazy
             if (condition)
             {
-                Console.WriteLine("---DEBUG: Condition is TRUE");
+                //vložíme nový kontext do zásobníku
+                symbolTables.Push(new SymbolTable());
+
+                //Console.WriteLine("---DEBUG: Condition is TRUE");
                 Visit(context.ifBlock());
+
+                //odstraníme kontext ze zásobníku
+                symbolTables.Pop();
                 return null;
             }
             else if (!condition)
             {
-                Console.WriteLine("---DEBUG: MAIN Condition is FALSE");
-                //pokud je FALSE, zkontrolujeme zda existuje ELSEIF
-                //POKUD ANO, zkontrolujeme zda je TRUE, pokud ano, provedeme příkazy
-                //POKUD NE, zkontrolujeme zda existuje ELSE, pokud ano, provedeme příkazy
-                //int conditionCount = 0;
-                //foreach (var conditionElse in context.condition())
-                //{
-                //    bool conditionElseResult = (bool)VisitCondition(conditionElse);
-                //    if (conditionElseResult)
-                //    {
-                //        Console.WriteLine("---DEBUG: ELSEIF Condition is TRUE");
-                //        //foreach (var statement in context.ifBlock())
-                //        //{
-                //        //    VisitIfBlock(statement);
-                //        //}
-                //        //Visit(else);
-
-                //        Visit(context.elseIfBlock(conditionCount - 1));
-
-                //        return null;
-                //    }
-                //    else
-                //    {
-                //        Console.WriteLine("---DEBUG: ELSEIF Condition is FALSE");
-                //        Console.WriteLine("---DEBUG: Moving on...");
-                //    }
-
-                //    conditionCount++;
-                //}
+                //Console.WriteLine("---DEBUG: MAIN Condition is FALSE");
                 for (int i = 1; i < context.condition().Length; i++)
                 {
                     bool conditionElseResult = (bool)VisitCondition(context.condition(i));
                     if (conditionElseResult)
                     {
-                        Console.WriteLine("---DEBUG: ELSEIF Condition is TRUE");
+                        //vložíme nový kontext do zásobníku
+                        symbolTables.Push(new SymbolTable());
+                        //Console.WriteLine("---DEBUG: ELSEIF Condition is TRUE");
                         // minus jedna protože první je IF
                         Visit(context.elseIfBlock(i - 1));
+                        //odstraníme kontext ze zásobníku
+                        symbolTables.Pop();
                         return null;
                     }
                     else
                     {
-                        Console.WriteLine("---DEBUG: ELSEIF Condition is FALSE");
-                        Console.WriteLine("---DEBUG: Moving on...");
+                        //Console.WriteLine("---DEBUG: ELSEIF Condition is FALSE");
+                        //Console.WriteLine("---DEBUG: Moving on...");
                     }
 
                 }
@@ -589,13 +646,11 @@ namespace BTEJA_Petr_Vavra
 
 
         //condition: expression ('>=' | '<=' | '>' | '<' | '=' | '#') expression | ident | ('1' | '0');
-        public override object VisitCondition([NotNull] Modula2Parser.ConditionContext context)
+        public override object VisitCondition(Modula2Parser.ConditionContext context)
         {
-
             string text = context.GetText();
 
-
-            //true nebo false check ('1' | '0')
+            // True nebo false check ('1' | '0')
             if (text == "1")
             {
                 return true;
@@ -605,7 +660,7 @@ namespace BTEJA_Petr_Vavra
                 return false;
             }
 
-            //check ('>=' | '<=' | '>' | '<' | '=' | '#')
+            // Check ('>=' | '<=' | '>' | '<' | '=' | '#')
             if (text.Contains(">="))
             {
                 object left = VisitExpression(context.expression(0));
@@ -645,6 +700,7 @@ namespace BTEJA_Petr_Vavra
                 bool result = IsEqual(left, right);
                 return result;
             }
+
             if (text.Contains("#"))
             {
                 object left = VisitExpression(context.expression(0));
@@ -653,51 +709,52 @@ namespace BTEJA_Petr_Vavra
                 return result;
             }
 
-            //check ident
+            // Check ident
             if (context.ident() != null)
             {
-                object ident = context.ident().GetText();
-                Variable variable = tryFindVariableByIdent(ident);
+                var ident = context.ident().GetText();
+
+                // Dohledání proměnné v aktuálním kontextu
+                Variable variable = null;
+                foreach (var table in symbolTables)
+                {
+                    variable = table.GetVariable(ident);
+                    if (variable != null)
+                        break;
+                }
+
                 if (variable == null)
                 {
                     throw new Exception("Variable " + ident + " is not defined.");
                 }
 
-                if (variable.Value == "1")
-                {
-                    return true;
-                }
-                if (variable.Value == "0")
-                {
-                    return false;
-                }
-                if (variable.DataType == DataType.INTEGER)
-                {
-                    if ((int)variable.Value == 1)
-                    {
-                        return true;
-                    }
-                    if ((int)variable.Value == 0)
-                    {
-                        return false;
-                    }
-                }
-                if (variable.DataType == DataType.REAL)
-                {
-                    if ((float)variable.Value == 1)
-                    {
-                        return true;
-                    }
-                    if ((float)variable.Value == 0)
-                    {
-                        return false;
-                    }
-                }
+                return ConvertVariableValueToBool(variable);
             }
+
             return null;
         }
 
+        private bool ConvertVariableValueToBool(Variable variable)
+        {
+            if (variable.Value == "1" || variable.Value == "true")
+            {
+                return true;
+            }
+            else if (variable.Value == "0" || variable.Value == "false")
+            {
+                return false;
+            }
+            else if (variable.DataType == DataType.INTEGER)
+            {
+                return (int)variable.Value == 1;
+            }
+            else if (variable.DataType == DataType.REAL)
+            {
+                return (float)variable.Value == 1;
+            }
 
+            return false;
+        }
         private bool GreaterThan(object left, object right)
         {
             if (left is int l && right is int r)
@@ -872,7 +929,7 @@ namespace BTEJA_Petr_Vavra
                 {
                     varFormals.Add((VarFormal)varFormalObject);
                 }
-                Console.WriteLine("---DEBUG: varFormal: " + varFormal.GetText());
+                //Console.WriteLine("---DEBUG: varFormal: " + varFormal.GetText());
             }
 
             //zjistíme návratový typ pokud existuje, jinak null
@@ -895,6 +952,7 @@ namespace BTEJA_Petr_Vavra
             object? returnExpression = null;
             if (context.expression() != null)
             {
+                //returnExpression = VisitExpression(context.expression());
                 returnExpression = context.expression();
             }
 
@@ -906,17 +964,26 @@ namespace BTEJA_Petr_Vavra
             procedure.Body = procedureBody;
             procedure.ReturnExpression = returnExpression;
 
-            Procedures.Add(procedure);
+            //přidáme proceduru do zásobníku
+            symbolTables.Peek().AddProcedure(procedure);
 
-            Console.WriteLine("---DEBUG: Name: " + procedureName + ", VarFormals: " + varFormals + "returnType: " + returnType
-                + ", Body: " + procedureBody + ", ReturnExpression: " + returnExpression);
+
+
+            //Console.WriteLine("---DEBUG: Name: " + procedureName + ", VarFormals: " + varFormals + "returnType: " + returnType
+            //+ ", Body: " + procedureBody + ", ReturnExpression: " + returnExpression);
             return null;
         }
+
+
+
 
 
         //procedureCall: (ident '.')* ident '(' (expression (',' expression)*)? ')';
         public override object VisitProcedureCall([NotNull] Modula2Parser.ProcedureCallContext context)
         {
+            //vytvoříme nový kontext pro proceduru
+            symbolTables.Push(new SymbolTable());
+
             //zjistíme název procedury(veškeré identy oddělené tečkou)
             List<string> procedureNames = new List<string>();
             for (int i = 0; i < context.ident().Length; i++)
@@ -924,44 +991,76 @@ namespace BTEJA_Petr_Vavra
                 procedureNames.Add(context.ident(i).GetText());
             }
 
-            //zjistíme parametry
-            List<object?> parameters = new List<object?>();
-            foreach (var expression in context.expression())
+            List<SymbolTable> symbolTablesList = symbolTables.ToList();
+
+            //zkontrolujeme jestli procedura existuje v tabulce symbolů na spodu zásobníku(globální kontext)
+            if (!symbolTablesList.Last().ProcedureExists(procedureNames[context.ident().Length - 1]))
             {
-                parameters.Add(VisitExpression(expression));
+                if (!builtInProcedures.Contains(procedureNames[context.ident().Length - 1]))
+                {
+                    throw new Exception("Procedure " + procedureNames[context.ident().Length - 1] + " is not defined.");
+                }
             }
-
-            Console.WriteLine("--DEBUG: delka ident pole: " + context.ident().Length);
-
-
-
-
-
-            //zjistíme proceduru(aktuálně udělané tak, že se bere pouze poslední identifikátor)
-            Procedure procedure = Procedures.Find(procedure => procedure.Name == procedureNames[context.ident().Length - 1]);
 
             //pokud se jedná o předdefinovanou proceduru WriteOut, vypíšeme hodnotu na jednu řádku
             if (procedureNames[context.ident().Length - 1] == "WriteOut")
             {
-                foreach (var parameter in parameters)
+                //foreach (var parameter in parameters)
+                //{
+                //    Console.Write(parameter);
+                //}
+
+                foreach (var parameter in context.expression())
                 {
-                    Console.Write(parameter);
+                    Console.WriteLine(VisitExpression(parameter));
                 }
+                symbolTables.Pop();
                 return null;
             }
             //pokud se jedná o předdefinovanou proceduru WriteLine, vypíšeme hodnotu na jednu řádku
             if (procedureNames[context.ident().Length - 1] == "WriteLine")
             {
                 Console.WriteLine();
+                symbolTables.Pop();
                 return null;
             }
             //pokud se jedná o předdefinovanou proceduru ReadIn, načteme hodnotu
             if (procedureNames[context.ident().Length - 1] == "ReadIn")
             {
                 string input = Console.ReadLine();
+                symbolTables.Pop();
                 return input;
             }
 
+            //zjistíme proceduru(aktuálně udělané tak, že se bere pouze poslední identifikátor)
+            Procedure procedure = symbolTablesList.Last().GetProcedure(procedureNames[context.ident().Length - 1]);
+
+            //zjistíme parametry
+            List<object?> parameters = new List<object?>();
+
+
+            //předělám foreach na for abych mohl získat index a přistupovat tak k procedure.VarFormals
+            for (int i = 0; i < context.expression().Length; i++)
+            {
+                Variable parameter = new Variable();
+                parameter.Value = VisitExpression(context.expression(i));
+                parameter.Name = procedure.VarFormals[i].Name;
+                //pokud parametr existuje jako proměnná v globálním kontextu, přidáme lokálně
+
+                if (symbolTablesList.Last().VariableExists(parameter.Name))
+                {
+                    symbolTables.Peek().AddVariable(symbolTablesList.Last().GetVariable(parameter.Name));
+                }
+                else
+                {
+                    //přidáme parametr do tabulky symbolů
+                    symbolTables.Peek().AddVariable(parameter);
+
+                }
+                parameters.Add(parameter);
+
+
+            }
 
             if (procedure != null)
             {
@@ -974,7 +1073,22 @@ namespace BTEJA_Petr_Vavra
                         //zjistíme typ parametru
                         DataType parameterType = procedure.VarFormals[i].Type;
                         //zjistíme typ hodnoty
-                        Type valueType = parameters[i].GetType();
+                        Variable parameter = symbolTables.Peek().GetVariable(procedure.VarFormals[i].Name);
+
+                        Type? valueType = null;
+
+                        if (parameter.Value == null)
+                        {
+                            if (parameter.DataType == DataType.ARRAY && parameterType == DataType.ARRAY)
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            valueType = parameter.Value.GetType();
+                        }
+
                         //pokud se typy nerovnají, vyhodíme chybu
                         if (
                             !((valueType == typeof(int) && parameterType == DataType.INTEGER)
@@ -1002,7 +1116,8 @@ namespace BTEJA_Petr_Vavra
 
             //return base.VisitProcedureCall(context);
 
-            Console.WriteLine("---DEBUG: procedureNames: " + procedureNames + ", parameters: " + parameters);
+            //Console.WriteLine("---DEBUG: procedureNames: " + procedureNames + ", parameters: " + parameters);
+
 
             //pokud je vše v pořádku, provedeme proceduru
             foreach (var statement in procedure.Body)
@@ -1010,21 +1125,25 @@ namespace BTEJA_Petr_Vavra
                 VisitStatement((Modula2Parser.StatementContext)statement);
             }
 
+
+
             //pokud je návratový typ NULL, vracíme NULL
             if (procedure.ReturnType == DataType.NULL)
             {
+                symbolTables.Pop();
                 return null;
             }
             //pokud není NULL, vracíme hodnotu
             else
             {
-                return procedure.ReturnExpression;
+                object? returnValue = VisitExpression((Modula2Parser.ExpressionContext)procedure.ReturnExpression);
+                symbolTables.Pop();
+                return returnValue;
+                //return VisitExpression((Modula2Parser.ExpressionContext)procedure.ReturnExpression);
+                //return procedure.ReturnExpression;
             }
 
             //TODO lokální kontext proměnné, které jsou v proceduře definované a předávání hodnot do procedury
-
-
-
 
         }
 
@@ -1035,7 +1154,7 @@ namespace BTEJA_Petr_Vavra
             VarFormal varFormal = new VarFormal();
             varFormal.Name = varFormalName;
             varFormal.Type = varFormalDataType;
-            Console.WriteLine("---DEBUG: varFormalName: " + varFormalName + ", varFormalDataType: " + varFormalDataType);
+            //Console.WriteLine("---DEBUG: varFormalName: " + varFormalName + ", varFormalDataType: " + varFormalDataType);
             return varFormal;
         }
     }
