@@ -1,8 +1,8 @@
 ❌# BTEJA_modula2❌
-Uchovávání proměnných ✅
-Kontrola datových typů při přiřazení do promměné ✅
-Kontrola existence proměnných při přiřazení ✅
-Stringy? ❌
+- Uchovávání proměnných ✅
+- Kontrola datových typů při přiřazení do promměné ✅
+- Kontrola existence proměnných při přiřazení ✅
+- Stringy? ❌
 
 
 Proměnné:
