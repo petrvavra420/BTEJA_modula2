@@ -26,9 +26,10 @@ varFormal: ident ':' type;
 
 condition: expression ('>=' | '<=' | '>' | '<' | '=' | '#') expression | ident | ('1' | '0');
 
-expression: term ((addOp) term)*;
+expression: (negateOp)? term ((addOp) term)*;
+negateOp : '-';
 
-term: factor ((multOp) factor)*;
+term:  factor ((multOp) factor)*;
 
 factor: procedureCall | string | character | realNumber | number | ident | '(' expression ')' | arrayIndexAccess;
 

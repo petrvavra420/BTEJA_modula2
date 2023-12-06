@@ -171,6 +171,16 @@ public interface IModula2Listener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitExpression([NotNull] Modula2Parser.ExpressionContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="Modula2Parser.negateOp"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterNegateOp([NotNull] Modula2Parser.NegateOpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="Modula2Parser.negateOp"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitNegateOp([NotNull] Modula2Parser.NegateOpContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="Modula2Parser.term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

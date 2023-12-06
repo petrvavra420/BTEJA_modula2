@@ -116,6 +116,12 @@ public interface IModula2Visitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExpression([NotNull] Modula2Parser.ExpressionContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="Modula2Parser.negateOp"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitNegateOp([NotNull] Modula2Parser.NegateOpContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="Modula2Parser.term"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

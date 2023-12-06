@@ -204,6 +204,18 @@ public partial class Modula2BaseListener : IModula2Listener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitExpression([NotNull] Modula2Parser.ExpressionContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="Modula2Parser.negateOp"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterNegateOp([NotNull] Modula2Parser.NegateOpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="Modula2Parser.negateOp"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitNegateOp([NotNull] Modula2Parser.NegateOpContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="Modula2Parser.term"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

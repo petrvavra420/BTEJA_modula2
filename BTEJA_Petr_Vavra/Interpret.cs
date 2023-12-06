@@ -23,7 +23,7 @@ namespace BTEJA_Petr_Vavra
             CommonTokenStream tokens = new CommonTokenStream(gramatikaLexer);
             Modula2Parser parser = new Modula2Parser(tokens);
             Modula2Parser.ProgramContext gramatikaContext = parser.program();
-           ModulaVisitor visitor = new ModulaVisitor();
+            ModulaVisitor visitor = new ModulaVisitor();
             visitor.symbolTables.Push(new SymbolTable());
 
             visitor.Visit(gramatikaContext);
