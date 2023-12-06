@@ -1,4 +1,4 @@
-❌# BTEJA_modula2❌
+✅# BTEJA_modula2✅
 - Uchovávání proměnných/procedur ✅
 - Kontrola datových typů při přiřazení do promměné ✅
 - Kontrola existence proměnných při přiřazení ✅
