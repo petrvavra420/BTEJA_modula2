@@ -18,7 +18,7 @@ namespace BTEJA_Petr_Vavra
 
         //zásobník tabulek symbolů(proměnné a procedury)  
         public Stack<SymbolTable> symbolTables = new Stack<SymbolTable>();
-        public List<string> builtInProcedures = new List<string>() { "ReadIn", "WriteOut", "WriteLine" };
+        public List<string> builtInProcedures = new List<string>() { "ReadIn", "WriteOut", "WriteLine", "Rand" };
 
 
 
@@ -324,6 +324,8 @@ namespace BTEJA_Petr_Vavra
                     result = Subtract(result, VisitTerm(context.term(i + 1))); // Odečte další term
                 }
             }
+
+
             return result;
         }
 
@@ -346,7 +348,19 @@ namespace BTEJA_Petr_Vavra
             }
             return result;
 
-            return base.VisitTerm(context);
+            //return base.VisitTerm(context);
+        }
+
+        public override object VisitFactor([NotNull] Modula2Parser.FactorContext context)
+        {
+            // Zde zkontrolujte, zda je ve contextu expression hodnota nastavena
+            if (context.expression() != null)
+            {
+                return VisitExpression(context.expression()); // Vraťte hodnotu z contextu expression
+            }
+
+            // Pokud expression není nastaveno, zpracujte Factor normálně
+            return base.VisitFactor(context);
         }
 
         private object? Divide(object? left, object? right)
@@ -632,7 +646,15 @@ namespace BTEJA_Petr_Vavra
                 //{
                 //    VisitIfBlock(statement);
                 //}
-                Visit(context.elseBlock());
+                if (context.elseBlock() != null)
+                {
+                    //vložíme nový kontext do zásobníku
+                    symbolTables.Push(new SymbolTable());
+
+                    Visit(context.elseBlock());
+
+                    symbolTables.Pop();
+                }
 
 
             }
@@ -1012,7 +1034,7 @@ namespace BTEJA_Petr_Vavra
 
                 foreach (var parameter in context.expression())
                 {
-                    Console.WriteLine(VisitExpression(parameter));
+                    Console.Write(VisitExpression(parameter));
                 }
                 symbolTables.Pop();
                 return null;
@@ -1031,6 +1053,45 @@ namespace BTEJA_Petr_Vavra
                 symbolTables.Pop();
                 return input;
             }
+            //pokud se jedná o předdefinovanou proceduru random, vygenerujeme náhodné číslo
+            if (procedureNames[context.ident().Length - 1] == "Rand")
+            {
+                //vytvoříme seznam pro parametry 
+                List<object?> parametersRand = new List<object?>();
+                foreach (var parameter in context.expression())
+                {
+                    parametersRand.Add(VisitExpression(parameter));
+                }
+                //pokud má dva parametry, vygenerujeme náhodné číslo v rozsahu
+                if (parametersRand.Count == 2)
+                {
+                    //pokud oba parametry nejsou typu int, vyhodíme chybu
+                    if ((parametersRand[0] is int && parametersRand[1] is int))
+                    {
+                        //pokud je první parametr větší než druhý, vyhodíme chybu
+                        if ((int)parametersRand[0] > (int)parametersRand[1])
+                        {
+                            throw new Exception("Invalid range of random numbers.");
+                        }
+                        else
+                        {
+                            Random random = new Random();
+                            int randomNumber = random.Next((int)parametersRand[0], (int)parametersRand[1]);
+                            symbolTables.Pop();
+                            return randomNumber;
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid type of parameters.");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Invalid number of parameters.");
+                }
+            }
+
 
             //zjistíme proceduru(aktuálně udělané tak, že se bere pouze poslední identifikátor)
             Procedure procedure = symbolTablesList.Last().GetProcedure(procedureNames[context.ident().Length - 1]);
@@ -1124,8 +1185,6 @@ namespace BTEJA_Petr_Vavra
             {
                 VisitStatement((Modula2Parser.StatementContext)statement);
             }
-
-
 
             //pokud je návratový typ NULL, vracíme NULL
             if (procedure.ReturnType == DataType.NULL)
