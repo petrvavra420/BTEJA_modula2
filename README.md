@@ -38,7 +38,7 @@ Struktury:
   -  Definice funkcí ✅
       - WriteOut ✅
       - ReadIn ✅
-      - je potřeba ošetřit vytváření metod s názvy "write" a "read" ❌
+      - je potřeba ošetřit vytváření metod s názvy "write" a "read" ✅
   -  Volání funkcí ✅
       - zde je potřeba dořešit problém s globálními/lokálními proměnnými. ✅
       - funkce lze volat ✅
