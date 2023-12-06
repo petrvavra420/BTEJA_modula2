@@ -2,12 +2,12 @@
 - Uchovávání proměnných/procedur ✅
 - Kontrola datových typů při přiřazení do promměné ✅
 - Kontrola existence proměnných při přiřazení ✅
-- Stringy? ❌
+- Stringy? nejsou potřeba, máme ARRAY OF CHAR ✅
 
 
 Proměnné:
   - INTEGER ✅
-      - nějak blbnou záporná čísla při inicializaci❌
+      - nějak blbnou záporná čísla při inicializaci - vyřešeno(chyba byla v gramatice) ✅
   - CHAR ✅
   - REAL ✅
   - ARRAY ✅
