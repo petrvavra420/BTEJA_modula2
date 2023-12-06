@@ -1,15 +1,17 @@
-# BTEJA_modula2
-Uchovávání proměnných ✅
-Kontrola datových typů při přiřazení do promměné ✅
-Kontrola existence proměnných při přiřazení ❌
+❌# BTEJA_modula2❌
+- Uchovávání proměnných/procedur ✅
+- Kontrola datových typů při přiřazení do promměné ✅
+- Kontrola existence proměnných při přiřazení ✅
+- Stringy? ❌
 
 
 Proměnné:
   - INTEGER ✅
-      - nějak blbnou záporná čísla při inicializaci
+      - nějak blbnou záporná čísla při inicializaci❌
   - CHAR ✅
   - REAL ✅
   - ARRAY ✅
+    - vícerozměrné pole ✅
   - inicilizace výrazem ✅
 
 Operace:
@@ -38,10 +40,10 @@ Struktury:
       - ReadIn ✅
       - je potřeba ošetřit vytváření metod s názvy "write" a "read" ❌
   -  Volání funkcí ✅
-      - zde je potřeba dořešit problém s globálními/lokálními proměnnými. ❌
+      - zde je potřeba dořešit problém s globálními/lokálními proměnnými. ✅
       - funkce lze volat ✅
-      - neumí správně pracovat s parametry pokud se nejedná o globální proměnné ❌
-  -  Lokální/globální proměnné ❌❌❌
+      - neumí správně pracovat s parametry pokud se nejedná o globální proměnné ✅
+  -  Lokální/globální proměnné  ✅
   -  Výpis do konzole ✅
   -  Čtení z konzole ✅
     
