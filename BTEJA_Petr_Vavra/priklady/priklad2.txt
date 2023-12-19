@@ -1,0 +1,25 @@
+VAR true : INTEGER := 1;
+VAR false : INTEGER := 0;
+VAR vypisElse : REAL := 1.3;
+VAR cislo1 : INTEGER := 5;
+VAR cislo2 : INTEGER := 5;
+
+IF true THEN
+WriteOut("Prvnipodminka");
+ELSIF cislo1 < cislo2 THEN
+WriteOut(5+(6+9)-8/2);
+ELSE
+WriteOut(vypisElse);
+END;
+
+IF 1 THEN 
+VAR x : INTEGER := 3;
+END;
+
+IF 0 THEN 
+ FOR i := 0 TO 10 BY 1 DO
+ WriteOut(i);
+ END;
+ELSE
+cislo2 := cislo1;
+END;

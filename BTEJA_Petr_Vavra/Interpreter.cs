@@ -13,7 +13,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace BTEJA_Petr_Vavra
 {
-    public class ModulaVisitor : Modula2BaseVisitor<object?>
+    public class Interpreter : Modula2BaseVisitor<object?>
     {
 
         //zásobník tabulek symbolů(proměnné a procedury)  
@@ -545,8 +545,6 @@ namespace BTEJA_Petr_Vavra
             {
                 rangeBy = (int)VisitExpression(context.expression(2));
             }
-
-            //Console.WriteLine("---DEBUG: " + ident + " a hodnota: " + variable.Value + ", TO: " + rangeTo + ", BY: " + rangeBy);
 
             // Uložení původní hodnoty proměnné pro pozdější obnovení
             int originalValue = (int)variable.Value;
@@ -1095,8 +1093,6 @@ namespace BTEJA_Petr_Vavra
                 symbolTables.Pop();
                 return returnValue;
             }
-
-
         }
 
         public override object VisitVarFormal([NotNull] Modula2Parser.VarFormalContext context)

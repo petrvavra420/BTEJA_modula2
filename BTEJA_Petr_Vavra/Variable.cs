@@ -67,9 +67,6 @@ namespace BTEJA_Petr_Vavra
                 return value;
             }
 
-            // V případě, že hodnota není typu string, value type ani ICloneable, záleží na tom, jak chceš hlubokou kopii implementovat
-            // Můžeš například použít serializaci/deserializaci nebo vytvořit vlastní hlubokou kopii, podle potřeby.
-
             throw new ArgumentException("Nelze provést hlubokou kopii hodnoty neznámého typu.");
         }
 
@@ -83,8 +80,6 @@ namespace BTEJA_Petr_Vavra
             variable.ArrayValues = this.ArrayValues;
             variable.ArrayType = this.ArrayType;
             return variable;
-
-
         }
     }
 }

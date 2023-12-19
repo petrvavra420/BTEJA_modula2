@@ -54,5 +54,4 @@ public class SymbolTable
         return procedures.ContainsKey(name) ? procedures[name] : null;
     }
 
-    // Další metody pro správu symbolů můžete přidat podle potřeby.
 }

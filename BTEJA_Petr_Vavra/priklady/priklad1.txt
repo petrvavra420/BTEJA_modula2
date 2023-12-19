@@ -1,0 +1,35 @@
+VAR poleZnaku : ARRAY 10 OF CHAR;
+VAR poleZnakuZnaku : ARRAY 10 OF ARRAY 10 OF CHAR;
+VAR cislo : INTEGER;
+cislo := 15;
+VAR realneCislo : REAL := 5.5;
+WriteOut(realneCislo);
+
+
+poleZnaku[0] := "A";
+WriteLine();
+WriteOut(poleZnaku[0]);
+
+poleZnakuZnaku[1][0] := "B";
+WriteLine();
+WriteOut(poleZnakuZnaku[1][0]);
+WriteLine();
+
+VAR poleCisel : ARRAY 10 OF INTEGER;
+
+FOR i := 0 TO 10 BY 1 DO
+	poleCisel[i] := i;
+	WriteOut(poleCisel[i], ",");
+END;
+
+WriteLine();
+
+VAR poleCiselCisel : ARRAY 10 OF ARRAY 10 OF INTEGER;
+
+FOR j := 0 TO 10 BY 1 DO
+ FOR k := 0 TO 10 BY 1 DO
+  poleCiselCisel[j][k] := Rand(0,100);
+  WriteOut(poleCiselCisel[j][k], ",");
+ END;
+END;
+

@@ -1,0 +1,21 @@
+program = { statement ";"} $ ;
+statement = var | ident [ {"[" expression "]" }] ":=" (expression | procedureCall) | if | for | procedure | procedureCall;
+var = "VAR" ident ":" type [ ":=" expression | procedureCall ];
+if = "IF" condition "THEN" { statement ";" } {( "ELSIF" condition "THEN" { statement ";" } )} [ "ELSE" { statement ";" } ] "END" ;
+for = "FOR" ident ":=" expression "TO" expression [ "BY" expression ] "DO" { statement ";" } "END" ;
+procedure = "PROCEDURE" ident [ "(" varFormal { ";" varFormal} ")" ] [ ":" type] ";" "BEGIN" { statement ";" } [ "RETURN" expression ";" ] "END" ident ;
+procedureCall = { ident "."} ident "(" [ expression {"," expression } ] ")" ;
+
+varFormal = ident ":" type ;
+condition = "1" | "0" | expression (">=" | "<=" | ">" | "<" | "=" | "#" ) expression | ident;
+expression = [ "+" | "-" ] term { ("+" | "-" ) term } ;
+term = factor { ( "*" | "/" ) factor } ;
+factor = procedureCall | string | character | realNumber | number | ident [ {"[" expression "]" }] | "(" expression ")" ;
+
+ident = /[A-Za-z][A-Za-z0-9]*/;
+type = "INTEGER" | "REAL" | "CHAR" | array ;
+array = "ARRAY" "OF" type | "ARRAY" expression "OF" type ; 
+realNumber = number "." number ;
+number = /[0-9]+/ ;
+character = '"' /./ '"' ;
+string = '"' /[^"]+/ '"' ;

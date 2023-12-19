@@ -1,0 +1,33 @@
+PROCEDURE spocitejDveCisla(cislo1: INTEGER; cislo2: INTEGER ): INTEGER;
+ BEGIN
+ VAR cislo3 : INTEGER;
+ cislo3 := cislo1 + cislo2;
+ RETURN cislo3;
+END spocitejDveCisla;
+
+VAR cisloVysledek : INTEGER := spocitejDveCisla(10,5);
+WriteOut("Soucet cisel 10 a 5: ",cisloVysledek);
+WriteLine();
+
+
+
+PROCEDURE vypisText(poleZnaku: ARRAY OF CHAR; delkaPole: INTEGER);
+BEGIN
+ FOR i := 0 TO delkaPole BY 1 DO 
+  WriteOut(poleZnaku[i]);
+ END;
+END vypisText;
+
+VAR poleZnaku : ARRAY 10 OF CHAR;
+poleZnaku[0] := "A";
+poleZnaku[1] := "B";
+poleZnaku[2] := "C";
+poleZnaku[3] := "D";
+poleZnaku[4] := "E";
+poleZnaku[5] := "F";
+poleZnaku[6] := "G";
+poleZnaku[7] := "H";
+poleZnaku[8] := "I";
+poleZnaku[9] := "J";
+
+vypisText(poleZnaku,10);

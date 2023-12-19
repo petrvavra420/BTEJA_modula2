@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BTEJA_Petr_Vavra
 {
-    internal class Interpret
+    internal class ProgramStart
     {
         static void Main(string[] args)
         {
@@ -23,7 +23,7 @@ namespace BTEJA_Petr_Vavra
             CommonTokenStream tokens = new CommonTokenStream(gramatikaLexer);
             Modula2Parser parser = new Modula2Parser(tokens);
             Modula2Parser.ProgramContext gramatikaContext = parser.program();
-            ModulaVisitor visitor = new ModulaVisitor();
+            Interpreter visitor = new Interpreter();
             visitor.symbolTables.Push(new SymbolTable());
 
             visitor.Visit(gramatikaContext);

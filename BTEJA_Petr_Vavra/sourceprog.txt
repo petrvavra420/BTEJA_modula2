@@ -1,15 +1,83 @@
+WriteOut("Priklad1");
+WriteLine();
+
+
+
+VAR poleZnakuZnaku : ARRAY 10 OF ARRAY 10 OF CHAR;
+VAR cislo : INTEGER;
+cislo := 15;
+VAR realneCislo : REAL := 5.5;
+WriteOut(realneCislo);
+
+poleZnakuZnaku[1][0] := "B";
+WriteLine();
+WriteOut(poleZnakuZnaku[1][0]);
+WriteLine();
+
+VAR poleCisel : ARRAY 10 OF INTEGER;
+
+FOR i := 0 TO 10 BY 1 DO
+	poleCisel[i] := i;
+	WriteOut(poleCisel[i], ",");
+END;
+
+WriteLine();
+
+VAR poleCiselCisel : ARRAY 10 OF ARRAY 10 OF INTEGER;
+
+FOR j := 0 TO 10 BY 1 DO
+ FOR k := 0 TO 10 BY 1 DO
+  poleCiselCisel[j][k] := Rand(0,100);
+  WriteOut(poleCiselCisel[j][k], ",");
+ END;
+END;
+
+WriteLine();
+WriteOut("Priklad2");
+WriteLine();
+
+VAR true : INTEGER := 1;
+VAR false : INTEGER := 0;
+VAR vypisElse : REAL := 1.3;
+VAR cislo1 : INTEGER := 5;
+VAR cislo2 : INTEGER := 5;
+
+IF true THEN
+	WriteOut("Prvnipodminka");
+ELSIF cislo1 < cislo2 THEN
+	WriteOut(5+(6+9)-8/2);
+ELSE
+	WriteOut(vypisElse);
+END;
+
+IF 1 THEN 
+	VAR x : INTEGER := 3;
+END;
+
+WriteLine();
+
+IF 0 THEN 
+	FOR i := 0 TO 10 BY 1 DO
+	WriteOut(i);
+END;
+ELSE
+	cislo2 := cislo1;
+END;
+
+WriteLine();
+WriteOut("Priklad3");
+WriteLine();
+
 PROCEDURE spocitejDveCisla(cislo1: INTEGER; cislo2: INTEGER ): INTEGER;
- BEGIN
- VAR cislo3 : INTEGER;
- cislo3 := cislo1 + cislo2;
- RETURN cislo3;
+	BEGIN
+	VAR cislo3 : INTEGER;
+	cislo3 := cislo1 + cislo2;
+	RETURN cislo3;
 END spocitejDveCisla;
 
 VAR cisloVysledek : INTEGER := spocitejDveCisla(10,5);
 WriteOut("Soucet cisel 10 a 5: ",cisloVysledek);
 WriteLine();
-
-
 
 PROCEDURE vypisText(poleZnaku: ARRAY OF CHAR; delkaPole: INTEGER);
 BEGIN
