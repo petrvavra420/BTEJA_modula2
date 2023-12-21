@@ -1,8 +1,22 @@
-PROCEDURE spocitejDveCisla(cislo1: INTEGER; cislo2: INTEGER ): INTEGER;
- BEGIN
- VAR cislo3 : INTEGER;
- cislo3 := cislo1 + cislo2;
- RETURN cislo3;
+WriteLine();
+
+VAR cisloVstup : INTEGER;
+WriteOut("Zadejte cislo: ");
+cisloVstup := ReadIn();
+WriteOut("Vase cislo: ", cisloVstup);
+
+VAR cisloNahodne : INTEGER;
+cisloNahodne := Rand(0,100);
+WriteLine();
+WriteOut("Nahodne cislo: ", cisloNahodne);
+WriteLine();
+
+
+PROCEDURE spocitejDveCisla(cisloPrvni: INTEGER; cisloDruhe: INTEGER ): INTEGER;
+BEGIN
+	VAR cislo3 : INTEGER;
+	cislo3 := cisloPrvni + cisloDruhe;
+	RETURN cislo3;
 END spocitejDveCisla;
 
 VAR cisloVysledek : INTEGER := spocitejDveCisla(10,5);
@@ -10,24 +24,46 @@ WriteOut("Soucet cisel 10 a 5: ",cisloVysledek);
 WriteLine();
 
 
-
 PROCEDURE vypisText(poleZnaku: ARRAY OF CHAR; delkaPole: INTEGER);
 BEGIN
- FOR i := 0 TO delkaPole BY 1 DO 
-  WriteOut(poleZnaku[i]);
- END;
+	FOR i := 0 TO delkaPole BY 1 DO 
+	WriteOut(poleZnaku[i]);
+	END;
 END vypisText;
 
-VAR poleZnaku : ARRAY 10 OF CHAR;
-poleZnaku[0] := "A";
-poleZnaku[1] := "B";
-poleZnaku[2] := "C";
-poleZnaku[3] := "D";
-poleZnaku[4] := "E";
-poleZnaku[5] := "F";
-poleZnaku[6] := "G";
-poleZnaku[7] := "H";
-poleZnaku[8] := "I";
-poleZnaku[9] := "J";
+WriteLine();
+WriteOut("Vypis: ", vypisText(poleZnaku,5));
 
-vypisText(poleZnaku,10);
+
+PROCEDURE rekurzivniFunkce(cislo: INTEGER);
+BEGIN
+	IF cislo > 0 THEN
+		WriteOut(cislo,",");
+		rekurzivniFunkce(cislo - 1);
+	END;
+END rekurzivniFunkce;
+
+WriteLine();
+WriteOut("Rekurzivni_funkce_prima: ", rekurzivniFunkce(10));
+
+
+
+WriteLine();
+WriteOut("Rekurzivni_funkce_neprima: ");
+PROCEDURE funkceRekurzeTypA(cislo: INTEGER);
+BEGIN
+	IF cisloRekA > 0 THEN
+		WriteOut(cisloRekA,",");
+		funkceRekurzeTypB(cislo - 1);
+	END;
+END funkceRekurzeTypA;
+
+PROCEDURE funkceRekurzeTypB(cislo: INTEGER);
+BEGIN
+	IF cislo > 0 THEN
+		WriteOut(cislo,",");
+		funkceRekurzeTypA(cislo - 1);
+	END;
+END funkceRekurzeTypB;
+
+funkceRekurzeTypA(10);

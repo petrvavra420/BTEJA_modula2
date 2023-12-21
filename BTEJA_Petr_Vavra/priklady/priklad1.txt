@@ -1,35 +1,45 @@
-VAR poleZnaku : ARRAY 10 OF CHAR;
-VAR poleZnakuZnaku : ARRAY 10 OF ARRAY 10 OF CHAR;
-VAR cislo : INTEGER;
-cislo := 15;
-VAR realneCislo : REAL := 5.5;
-WriteOut(realneCislo);
+VAR cislo1 : INTEGER := 1;
+VAR float1 : REAL := 1.0;
+cislo1 := cislo1 + cislo1 + float1;
+WriteOut(cislo1 * 10 / float1 + 20 - 10);
 
-
-poleZnaku[0] := "A";
+VAR znak1 : CHAR := "a";
+VAR znak2 : CHAR := "b";
+VAR znak3 : CHAR := "c";
+znak1 := znak2;
 WriteLine();
-WriteOut(poleZnaku[0]);
+WriteOut(znak1);
 
-poleZnakuZnaku[1][0] := "B";
+VAR poleCisel : ARRAY 12 OF INTEGER;
+poleCisel[0] := 1;
+poleCisel[11] := 12;
 WriteLine();
-WriteOut(poleZnakuZnaku[1][0]);
+WriteOut(poleCisel[0]);
+WriteOut(",",poleCisel[11]);
+
+VAR poleZnaku : ARRAY 5 OF CHAR;
+poleZnaku[0] := "H";
+poleZnaku[1] := "e";
+poleZnaku[2] := "l";
+poleZnaku[3] := "l";
+poleZnaku[4] := "o";
 WriteLine();
+WriteOut(poleZnaku[0],poleZnaku[1],poleZnaku[2],poleZnaku[3],poleZnaku[4]);
 
-VAR poleCisel : ARRAY 10 OF INTEGER;
-
-FOR i := 0 TO 10 BY 1 DO
-	poleCisel[i] := i;
-	WriteOut(poleCisel[i], ",");
-END;
-
+VAR poleCiselCisel : ARRAY 5 OF ARRAY 5 OF INTEGER;
+poleCiselCisel[0][4] := -500 * 2 + cislo1;
 WriteLine();
+WriteOut(poleCiselCisel[0][4]);
 
-VAR poleCiselCisel : ARRAY 10 OF ARRAY 10 OF INTEGER;
+VAR poleCiselCiselCisel : ARRAY 5 OF ARRAY 5 OF ARRAY 5 OF INTEGER;
+poleCiselCiselCisel[0][4][0] := 250 * float1 - float1;
+WriteLine();
+WriteOut(poleCiselCiselCisel[0][4][0]);
 
-FOR j := 0 TO 10 BY 1 DO
- FOR k := 0 TO 10 BY 1 DO
-  poleCiselCisel[j][k] := Rand(0,100);
-  WriteOut(poleCiselCisel[j][k], ",");
- END;
-END;
-
+VAR poleZnakuZnaku : ARRAY 5 OF ARRAY 5 OF ARRAY 5 OF CHAR;
+poleZnakuZnaku[0][1] := "A";
+poleZnakuZnaku[0][2] := "h";
+poleZnakuZnaku[0][3] := "o";
+poleZnakuZnaku[0][4] := "j";
+WriteLine();
+WriteOut(poleZnakuZnaku[0][1],poleZnakuZnaku[0][2],poleZnakuZnaku[0][3],poleZnakuZnaku[0][4]);

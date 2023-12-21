@@ -176,6 +176,8 @@ namespace BTEJA_Petr_Vavra
                 || (valueType == typeof(string) && varFind.DataType == DataType.CHAR)
                 || (valueType == typeof(float) && varFind.DataType == DataType.REAL)
                 || (valueType == typeof(int) && varFind.DataType == DataType.REAL)
+                || (valueType == typeof(float) && varFind.DataType == DataType.INTEGER)
+
             ))
             {
                 // Pokud je hodnota string a typ je integer, zkuste převést
@@ -819,6 +821,11 @@ namespace BTEJA_Petr_Vavra
             if (left is float lFloat && right is int rInt)
             {
                 return lFloat == rInt;
+            }
+
+            if (left is string lString && right is string rString)
+            {
+                return lString == rString;
             }
             throw new Exception("unable to compare " + left + " and " + right);
         }

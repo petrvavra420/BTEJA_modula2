@@ -1,77 +1,159 @@
-WriteOut("Priklad1");
+VAR cislo1 : INTEGER := 1;
+VAR float1 : REAL := 1.0;
+cislo1 := cislo1 + cislo1 + float1;
+WriteOut(cislo1 * 10 / float1 + 20 - 10);
+
+VAR znak1 : CHAR := "a";
+VAR znak2 : CHAR := "b";
+VAR znak3 : CHAR := "c";
+znak1 := znak2;
 WriteLine();
+WriteOut(znak1);
 
-
-
-VAR poleZnakuZnaku : ARRAY 10 OF ARRAY 10 OF CHAR;
-VAR cislo : INTEGER;
-cislo := 15;
-VAR realneCislo : REAL := 5.5;
-WriteOut(realneCislo);
-
-poleZnakuZnaku[1][0] := "B";
+VAR poleCisel : ARRAY 12 OF INTEGER;
+poleCisel[0] := 1;
+poleCisel[11] := 12;
 WriteLine();
-WriteOut(poleZnakuZnaku[1][0]);
+WriteOut(poleCisel[0]);
+WriteOut(",",poleCisel[11]);
+
+VAR poleZnaku : ARRAY 5 OF CHAR;
+poleZnaku[0] := "H";
+poleZnaku[1] := "e";
+poleZnaku[2] := "l";
+poleZnaku[3] := "l";
+poleZnaku[4] := "o";
 WriteLine();
+WriteOut(poleZnaku[0],poleZnaku[1],poleZnaku[2],poleZnaku[3],poleZnaku[4]);
 
-VAR poleCisel : ARRAY 10 OF INTEGER;
-
-FOR i := 0 TO 10 BY 1 DO
-	poleCisel[i] := i;
-	WriteOut(poleCisel[i], ",");
-END;
-
+VAR poleCiselCisel : ARRAY 5 OF ARRAY 5 OF INTEGER;
+poleCiselCisel[0][4] := -500 * 2 + cislo1;
 WriteLine();
+WriteOut(poleCiselCisel[0][4]);
 
-VAR poleCiselCisel : ARRAY 10 OF ARRAY 10 OF INTEGER;
-
-FOR j := 0 TO 10 BY 1 DO
- FOR k := 0 TO 10 BY 1 DO
-  poleCiselCisel[j][k] := Rand(0,100);
-  WriteOut(poleCiselCisel[j][k], ",");
- END;
-END;
-
+VAR poleCiselCiselCisel : ARRAY 5 OF ARRAY 5 OF ARRAY 5 OF INTEGER;
+poleCiselCiselCisel[0][4][0] := 250 * float1 - float1;
 WriteLine();
-WriteOut("Priklad2");
+WriteOut(poleCiselCiselCisel[0][4][0]);
+
+VAR poleZnakuZnaku : ARRAY 5 OF ARRAY 5 OF ARRAY 5 OF CHAR;
+poleZnakuZnaku[0][1] := "A";
+poleZnakuZnaku[0][2] := "h";
+poleZnakuZnaku[0][3] := "o";
+poleZnakuZnaku[0][4] := "j";
 WriteLine();
+WriteOut(poleZnakuZnaku[0][1],poleZnakuZnaku[0][2],poleZnakuZnaku[0][3],poleZnakuZnaku[0][4]);
+
+
+
+
 
 VAR true : INTEGER := 1;
 VAR false : INTEGER := 0;
-VAR vypisElse : REAL := 1.3;
-VAR cislo1 : INTEGER := 5;
-VAR cislo2 : INTEGER := 5;
+
+IF true THEN
+	WriteLine();
+	WriteOut("true");
+ELSE
+	WriteLine();
+	WriteOut("false");
+END;
+
+IF false THEN
+	WriteLine();
+	WriteOut("true");
+ELSE
+	WriteLine();
+	WriteOut("false");
+END;
+
+IF 1 THEN
+	WriteLine();
+	WriteOut("true_test_1");
+END;
+
+IF 0 THEN
+	WriteLine();
+	WriteOut("true_test_0");
+END;
+
+
+IF cislo1 = 3 THEN
+	WriteLine();
+	WriteOut("cislo1 = 3");
+
+	IF float1 = 1.0 THEN
+		WriteLine();
+		WriteOut("float1 = 1.0");
+
+		IF znak1 = "b" THEN
+			WriteLine();
+			WriteOut("znak1 = a");
+		END;
+	END;
+ELSE
+	WriteLine();
+	WriteOut("cislo1 # 3");
+END;
+
+IF cislo1 # 5+5*8-6 THEN
+	WriteLine();
+	WriteOut("cislo1 # 5+5*8-6");
+END;
+
+WriteLine();
 
 IF true THEN
 	WriteOut("Prvnipodminka");
-ELSIF cislo1 < cislo2 THEN
-	WriteOut(5+(6+9)-8/2);
+ELSIF cislo1 < cislo1 THEN
+	WriteOut("Druhy",5+(6+9)-8/2);
 ELSE
-	WriteOut(vypisElse);
+	WriteOut("Treti");
 END;
 
-IF 1 THEN 
-	VAR x : INTEGER := 3;
-END;
+
 
 WriteLine();
 
-IF 0 THEN 
-	FOR i := 0 TO 10 BY 1 DO
+FOR i := 0 TO 10 DO
 	WriteOut(i);
 END;
-ELSE
-	cislo2 := cislo1;
+
+FOR l := 0 TO 5+20/5 DO
+	FOR m := 0 TO 2 DO
+		IF l = 5 THEN
+			WriteLine();
+			WriteOut(l);
+		END;
+	END;
 END;
 
-WriteLine();
-WriteOut("Priklad3");
+
+
+
+
+
+
+
+
 WriteLine();
 
-PROCEDURE spocitejDveCisla(cislo1: INTEGER; cislo2: INTEGER ): INTEGER;
-	BEGIN
+VAR cisloVstup : INTEGER;
+WriteOut("Zadejte cislo: ");
+cisloVstup := ReadIn();
+WriteOut("Vase cislo: ", cisloVstup);
+
+VAR cisloNahodne : INTEGER;
+cisloNahodne := Rand(0,100);
+WriteLine();
+WriteOut("Nahodne cislo: ", cisloNahodne);
+WriteLine();
+
+
+PROCEDURE spocitejDveCisla(cisloPrvni: INTEGER; cisloDruhe: INTEGER ): INTEGER;
+BEGIN
 	VAR cislo3 : INTEGER;
-	cislo3 := cislo1 + cislo2;
+	cislo3 := cisloPrvni + cisloDruhe;
 	RETURN cislo3;
 END spocitejDveCisla;
 
@@ -79,23 +161,53 @@ VAR cisloVysledek : INTEGER := spocitejDveCisla(10,5);
 WriteOut("Soucet cisel 10 a 5: ",cisloVysledek);
 WriteLine();
 
+
 PROCEDURE vypisText(poleZnaku: ARRAY OF CHAR; delkaPole: INTEGER);
 BEGIN
- FOR i := 0 TO delkaPole BY 1 DO 
-  WriteOut(poleZnaku[i]);
- END;
+	FOR i := 0 TO delkaPole BY 1 DO 
+	WriteOut(poleZnaku[i]);
+	END;
 END vypisText;
 
-VAR poleZnaku : ARRAY 10 OF CHAR;
-poleZnaku[0] := "A";
-poleZnaku[1] := "B";
-poleZnaku[2] := "C";
-poleZnaku[3] := "D";
-poleZnaku[4] := "E";
-poleZnaku[5] := "F";
-poleZnaku[6] := "G";
-poleZnaku[7] := "H";
-poleZnaku[8] := "I";
-poleZnaku[9] := "J";
+WriteLine();
+WriteOut("Vypis: ", vypisText(poleZnaku,5));
 
-vypisText(poleZnaku,10);
+
+PROCEDURE rekurzivniFunkce(cislo: INTEGER);
+BEGIN
+	IF cislo > 0 THEN
+		WriteOut(cislo,",");
+		rekurzivniFunkce(cislo - 1);
+	END;
+END rekurzivniFunkce;
+
+WriteLine();
+WriteOut("Rekurzivni_funkce_prima: ", rekurzivniFunkce(10));
+
+
+
+WriteLine();
+WriteOut("Rekurzivni_funkce_neprima: ");
+PROCEDURE funkceRekurzeTypA(cisloRekA: INTEGER);
+BEGIN
+	IF cisloRekA > 0 THEN
+		WriteOut(cisloRekA,",");
+		funkceRekurzeTypB(cisloRekA - 1);
+	END;
+END funkceRekurzeTypA;
+
+PROCEDURE funkceRekurzeTypB(cislo: INTEGER);
+BEGIN
+	IF cislo > 0 THEN
+		WriteOut(cislo,",");
+		funkceRekurzeTypA(cislo - 1);
+	END;
+END funkceRekurzeTypB;
+
+funkceRekurzeTypA(10);
+
+
+
+
+
+
